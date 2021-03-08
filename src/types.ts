@@ -1,0 +1,1 @@
+export type CirclePos = "lt" | "t" | "rt" | "l" | "r" | "lb" | "b" | "br";

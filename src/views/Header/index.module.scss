@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  border: 1px solid #eee;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  .numberPicker{
+    width: 80px;
+  }
+}

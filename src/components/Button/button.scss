@@ -1,0 +1,69 @@
+@import '../../styles/index.scss';
+
+.btn{
+    position: relative;
+    display: inline-block;
+    font-weight: $btn-font-weight;
+    line-height: $btn-line-height;
+    color: $body-color;
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    background-image: none;
+   @include button-size($btn-padding-x, $btn-padding-y, $btn-font-size, $btn-border-radius);
+    box-shadow: $btn-box-shadow;
+    border: $btn-border-width solid transparent;
+    cursor: pointer;
+    // padding: $btn-padding-y $btn-padding-x;
+    font-family:$btn-font-family;
+    transition: $btn-transition;
+    &.disabled,
+    &[disabled]{
+        cursor: not-allowed;
+        opacity: $btn-disabled-opacity;
+        box-shadow: none;
+        > * {
+            pointer-events: none; // 不接受鼠标事件
+        }
+    }
+}
+.btn-big{
+    @include button-size($btn-padding-x-lg, $btn-padding-y-lg,$btn-font-size-lg, $btn-border-radius-lg)
+}
+.btn-small{
+    @include button-size($btn-padding-x-sm, $btn-padding-y-sm,$btn-font-size-sm, $btn-border-radius-sm)
+}
+.btn-primary{
+    @include button-style($primary, $primary,white)
+}
+.btn-warning{
+    @include button-style($warning, $warning,white)
+}
+.btn-warning{
+    @include button-style($warning, $warning,white)
+}
+.btn-danger{
+    @include button-style($danger, $danger,white)
+}
+.btn-default{
+    @include button-style($white, $white, $gray-800)
+}
+.btn-link{
+    font-weight: $font-weight-normal;
+    text-decoration: none;
+    color:$btn-link-color;
+    &:hover{
+        text-decoration: none;
+    }
+    &.disabled,
+    
+    &[disabled]{
+        cursor: not-allowed;
+        opacity: $btn-disabled-opacity;
+        box-shadow: none;
+        > * {
+            pointer-events: none; // 不接受鼠标事件
+        }
+    }
+}
+

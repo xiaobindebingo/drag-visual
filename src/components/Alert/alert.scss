@@ -1,0 +1,53 @@
+@import '../../styles/index.scss';
+
+.alert{
+    width: 100%;
+    height: 100%;
+    // padding: 20px;
+    >.alert-message{
+        
+        display: flex;
+        position: relative;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        color: rgba(0,0,0,.85);
+        font-size: 16px;
+        >.alert-close{
+           position: absolute;
+           right: 0;
+           margin-right: 20px;
+
+        }
+    }
+    >.alert-content{
+        color: rgba(0,0,0,.65);
+        line-height: 1.5715;
+        border-radius: 2px;
+    
+    }
+}
+$alert-background-success: #f6ffed !default;
+$alert-borderColor-success: #b7eb8f !default;
+$alert-background-default: #f6ffed !default;
+$alert-borderColor-default: #91d5ff !default;
+$alert-background-danger: #fff2f0 !default;
+$alert-borderColor-danger: #ffccc7 !default;
+$alert-background-warning: #fffbe6 !default;
+$alert-borderColor-warning: #ffe58f !default;
+@mixin alertStyle($alert-background, $alert-borderColor) {
+    background: $alert-background;
+    border: $alert-borderColor
+}
+.alert-success{
+    @include alertStyle($alert-background-success, $alert-borderColor-success);
+}
+.alert-default{
+    @include alertStyle($alert-background-default, $alert-borderColor-default);
+}
+.alert-danger{
+    @include alertStyle($alert-background-danger, $alert-borderColor-danger);
+}
+.alert-warning{
+    @include alertStyle($alert-background-warning, $alert-borderColor-warning);
+}
+

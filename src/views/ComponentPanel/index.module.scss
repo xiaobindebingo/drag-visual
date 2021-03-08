@@ -1,0 +1,20 @@
+
+.componentList {
+  display: flex;
+  padding: 16px;
+  width: 200px;
+  height: 100%;
+  border-right: 1px solid #eee;
+  .cell{
+    margin-left: 8px;
+    >img{
+      width: 50px;
+      height: 50px;
+    }
+    .text{
+      text-align: center;
+      letter-spacing: 2;
+    }
+
+  }
+}
