@@ -156,7 +156,10 @@ function Header(props) {
       </Button>
 
       <Button
-        
+        disabled = {
+          !componentMap[selectComponentId] || 
+          componentMap[selectComponentId].type !== 'group'
+        }
         btnType="primary"
         onClick={handleSplit}
       >
