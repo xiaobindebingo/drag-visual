@@ -38,7 +38,17 @@ function Element(props) {
         containerProps={containerProps}
         id={id}
       >
-        <Component {...componentProps}>{children}</Component>
+        <Component 
+          {...componentProps}
+        >
+          {React.Children.map(children, (child)=>{
+            return (
+              <div style={{ position: 'absolute', zIndex: -1}}>
+                {child}
+              </div>
+            )
+          })}
+        </Component>
       </ResizeWrapper>
     );
   }

@@ -25,6 +25,7 @@ function Area(props) {
   return (
       <div
         style={{
+          zIndex: 999999,
           position: "absolute",
           width,
           height,

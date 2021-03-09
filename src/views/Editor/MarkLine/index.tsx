@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import cls from "classnames";
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { connect } from "react-redux";
-import events from "../../../eventbus";
 import styles from "./index.module.scss";
 import { changeState } from "../../../utils";
 
@@ -53,12 +52,14 @@ function MarkLine(props) {
     componentMap, 
     selectComponentId, 
     updateCurComponentPos,
+    updateIsNearly,
   } = props;
 
-  const isNearly = (dragVal, targetVal): boolean =>
-    Math.abs(dragVal - targetVal) <= diff;
+  const isNearly = (dragVal, targetVal): boolean => {
+    return Math.abs(dragVal - targetVal) <= diff;
+  }
+    
 
-  
   const getCurrentComponentsPosition = () => {
     const currentComponent = componentMap[selectComponentId] || {};
     const { containerProps } = currentComponent || {};
@@ -243,7 +244,7 @@ function MarkLine(props) {
         }
       }
     });
-  }, [curTop, curLeft, curRight, componentMap]);
+  }, [curBottom, curTop, curLeft, curRight, componentMap]);
 
   useEffect(() => {
     document.addEventListener("mouseup", hideLine);
@@ -278,5 +279,7 @@ export default connect(
   (dispatch) => ({
     updateCurComponentPos: (val) =>
       dispatch({ type: "updateCurComponentPos", payload: val }),
+    updateIsNearly: (val) => 
+      dispatch(changeState('isNearly',val)),
   })
 )(MarkLine);

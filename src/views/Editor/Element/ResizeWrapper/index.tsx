@@ -24,7 +24,6 @@ function ResizeWrapper(props) {
     className,
     containerProps,
     selectComponentId,
-    isNearly,
     updateConatainerPropsStyle,
     updateSelectComponentAndOrderMap,
     componentMap,
@@ -35,7 +34,6 @@ function ResizeWrapper(props) {
   const isSelected = id && id === selectComponentId;
 
   const updateComponentItemByPos = (position: CirclePos, updateProps) => {
-    //
     const { distanceX = 0, distanceY = 0 } = updateProps;
     const newPropsByPos = {
       lt: {
@@ -91,8 +89,9 @@ function ResizeWrapper(props) {
     const top = e.currentTarget.offsetTop;
 
     updateSelectComponentAndOrderMap(id, orderMap);
-
+    let hasMove = false
     const move = (moveEvent) => {
+      hasMove = true;
       const { x: curX, y: curY } = getClientPosByEvent(moveEvent);
       const curLeft = curX - startX + left;
       const curTop = curY - startY + top;
