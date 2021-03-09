@@ -1,31 +1,39 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
 import cls from "classnames";
-import {
-  changeState,
-  getClientPosByEvent,
-} from "../../../utils";
-import { CirclePos } from '../../../types';
-import Circle from "../Circle";
-import { circleProps } from './constants';
+import { changeState, getClientPosByEvent } from "../../../../utils";
+import cloneDeep from "lodash/cloneDeep";
+import { CirclePos } from "../../../../types";
+import Circle from "../../Circle";
+import { circleProps } from "./constants";
 import styles from "./index.module.scss";
 
+const updateComponentMapOrder = (id, componentMap) => {
+  const copyObj = cloneDeep(componentMap);
+  delete copyObj[id];
+  copyObj[id] = componentMap[id];
+  return copyObj;
+};
 
 function ResizeWrapper(props) {
   const {
     id,
-    parentId,
+    index,
+    style,
+    className,
     containerProps,
     selectComponentId,
     updateConatainerPropsStyle,
-    updateSelectComponent, 
+    updateSelectComponentAndOrderMap,
+    componentMap,
   } = props;
 
   const wrapper = useRef<any>({});
   const { offsetWidth, offsetHeight, offsetLeft, offsetTop } = wrapper.current;
   const isSelected = id && id === selectComponentId;
 
-  const updateComponentItemByPos = (position: CirclePos, updateProps) => { // 
+  const updateComponentItemByPos = (position: CirclePos, updateProps) => {
+    //
     const { distanceX = 0, distanceY = 0 } = updateProps;
     const newPropsByPos = {
       lt: {
@@ -75,13 +83,8 @@ function ResizeWrapper(props) {
   const handleMouseDown = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    debugger;
-    if (parentId) {
-      updateSelectComponent(parentId); 
-    } else {
-      updateSelectComponent(id)
-    }
-
+    const orderMap = updateComponentMapOrder(id, componentMap);
+    updateSelectComponentAndOrderMap(id, orderMap);
     const { x: startX, y: startY } = getClientPosByEvent(e);
     const left = e.currentTarget.offsetLeft;
     const top = e.currentTarget.offsetTop;
@@ -89,7 +92,7 @@ function ResizeWrapper(props) {
       const { x: curX, y: curY } = getClientPosByEvent(moveEvent);
       const curLeft = curX - startX + left;
       const curTop = curY - startY + top;
-      
+
       updateConatainerPropsStyle({
         key: id,
         left: curLeft,
@@ -103,23 +106,26 @@ function ResizeWrapper(props) {
     document.addEventListener("mousemove", move);
     document.addEventListener("mouseup", up);
   };
-  console.log()
   return (
     <div
       ref={wrapper}
       key={id}
       className={cls({
+        [className]: true,
         [styles.selected]: isSelected,
       })}
       style={{
         position: "absolute",
         cursor: "move",
+        ...style,
+        zIndex: index,
         ...containerProps.style,
+        width: containerProps.style.width,
+        height: containerProps.style.height,
       }}
       onMouseDown={handleMouseDown}
       onDragOver={(e) => e.preventDefault()}
     >
-
       {isSelected &&
         circleProps.map((circleProp) => {
           return (
@@ -143,6 +149,16 @@ export default connect(
         type: "updateConatainer",
         payload: val,
       }),
-    updateSelectComponent: (id) => dispatch(changeState("selectComponentId", id)),
+      updateSelectComponentAndOrderMap: (selectComponentId, componentMap) =>
+      dispatch(
+        changeState([
+          {
+            selectComponentId,
+          },
+          {
+            componentMap,
+          },
+        ])
+      ),
   })
 )(ResizeWrapper);

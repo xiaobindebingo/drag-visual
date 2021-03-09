@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import cloneDeep from 'lodash/cloneDeep';
 import GridLine from "./GridLine";
 import styles from "./index.module.scss";
 import { v4 as uuid } from "uuid";
@@ -9,7 +10,7 @@ import MarkLine from './MarkLine';
 import Area from './Area';
 import { IArea } from '../../interface';
 
-const id = 'editorWrapper';
+export const id = 'editorWrapper';
 function Editor(props) {
   const {
     canvasWidth,
@@ -93,7 +94,6 @@ function Editor(props) {
       // 计算盒子
       const containIds: string[] = [];
       Object.keys(componentMap).forEach(id => {
-        console.log(areaPos)
         const { startPos, endPos} = areaPos;
         const boxInfo = {
           left : Math.min(startPos.left, endPos.left),
@@ -173,33 +173,36 @@ function Editor(props) {
 
   const converData = componentMap => {
     const uuids = Object.keys(componentMap);
+    const copyComponentMap = cloneDeep(componentMap)
     uuids.forEach(id => {
-      const { parentId } = componentMap[id];
+      const { parentId } = copyComponentMap[id];
       if (parentId) {
-        if(componentMap[parentId].children) {
-          componentMap[parentId]['children'][id] = componentMap[id]
+        if(copyComponentMap[parentId].children) {
+          copyComponentMap[parentId]['children'][id] = copyComponentMap[id]
         } else {
-          componentMap[parentId]['children'] = {
-            [id]: componentMap[id]
+          copyComponentMap[parentId]['children'] = {
+            [id]: copyComponentMap[id]
           }
         }
-        delete componentMap[id];
+        delete copyComponentMap[id];
       }
     });
-    return componentMap
+    return copyComponentMap
   }
 
   const renderElement = (data) => {
     if(!data) return null;
-    return Object.keys(data).map((uuid) => {
+    return Object.keys(data).map((uuid, index) => {
       const item = data[uuid];
       return (
-      <Element id={uuid} key={uuid} item={item}>
+      <Element id={uuid} key={uuid} item={item} index={index}>
        {renderElement(item.children)}
       </Element>)
   })
   }
 
+  const transferData = converData(componentMap);
+  console.log(componentMap,'transferData');
   return (
     <div 
       id={id} 
@@ -219,7 +222,7 @@ function Editor(props) {
       >
         <GridLine></GridLine>
         {
-         renderElement(converData(componentMap))
+         renderElement(transferData)
         }
       </div>
       <MarkLine />

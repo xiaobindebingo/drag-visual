@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import ResizeWrapper from "../ResizeWrapper";
-import { IArea } from "../../../interface";
+// import ResizeWrapper from "../ResizeWrapper";
+// import { IArea } from "../../../interface";
 
 function Area(props) {
   const { 

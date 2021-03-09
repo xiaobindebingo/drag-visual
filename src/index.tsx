@@ -19,7 +19,7 @@ const Parent = () => {
         <div className={styles.editor}>
           <Editor />
         </div>
-        {/* <AttributePanel /> */}
+        <AttributePanel />
       </div>
     </div>
   )

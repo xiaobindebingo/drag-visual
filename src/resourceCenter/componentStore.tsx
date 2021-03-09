@@ -14,8 +14,8 @@ Alert.config = {
 };
 
 Alert.initialProps = {
-   width: 400,
-   height: 200,
+   width: 200,
+   height: 100,
    type: 'danger',
    title: 'dangerTitle',
    children: '哈哈'

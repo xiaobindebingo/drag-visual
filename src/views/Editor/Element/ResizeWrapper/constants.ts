@@ -1,5 +1,5 @@
 
-import { CirclePos } from '../../../types';
+import { CirclePos } from '../../../../types';
 
 export const circleProps: { position: CirclePos; style: object }[] = [
   {

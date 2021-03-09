@@ -102,7 +102,8 @@ function MarkLine(props) {
   useDeepCompareEffect(() => {
     Object.keys(componentMap).forEach((id) => {
       const { containerProps } = componentMap[id];
-      if (id === selectComponentId) return;
+      // 当前组件被组合组件包括，或者选中的组件是当前组件不显示markline
+      if (id === selectComponentId || componentMap[id]['parentId']) return;
       const { top, left, width, height } = containerProps.style;
       const right = left + width;
       const bottom = top + height;

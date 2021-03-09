@@ -13,9 +13,6 @@ function Header(props) {
     canvasHeight,
     scale,
     updateComponentMap,
-    // updateSelectId,
-  } = props;
-  const {
     changeWidth,
     changeHeight,
     changeScale,
@@ -60,13 +57,12 @@ function Header(props) {
           },
         };
       }
-      return componentMap[id];
-    }, componentMap);
+      return {[id]: componentMap[id]};
+    }, {});
   };
   const handleCombine = () => {
     const parentId = uuid();
     const combineMap = getCombineComponentMap(parentId);
-    // updateSelectId(parentId)
     updateComponentMap(
       {
         ...combineMap,
@@ -80,7 +76,7 @@ function Header(props) {
         },
       },
       parentId,
-      [], // 组合按钮边尘禁用
+      [], // 组合按钮变成禁用
       {
         startPos: {
           left: 0,
@@ -135,7 +131,7 @@ export default connect(
       changeWidth: (val) => dispatch(changeState("canvasWidth", val)),
       changeHeight: (val) => dispatch(changeState("canvasHeight", val)),
       changeScale: (val) => dispatch(changeState("scale", val)),
-      updateComponentMap: (val, id, containIds ,pos) =>
+      updateComponentMap: (val, id, containIds ,pos) =>{
         dispatch(
           changeState([
             {
@@ -151,7 +147,9 @@ export default connect(
               areaPos: pos,
             }
           ])
-        ),
+        );
+      }
+       
     };
   }
 )(Header);

@@ -36,7 +36,6 @@ function reducer(state = initialState, action) {
     const {key, ...restProps } = action.payload;
 
     const result  =JSON.parse(restProps.itemProps);
-    console.log(result,'restProps')
     return {
       ...state,
       componentMap: {

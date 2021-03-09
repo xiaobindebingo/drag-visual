@@ -1,16 +1,13 @@
 import React from 'react';
 import styles from './index.module.scss';
 
-function Group() {
+function Group(props) {
   return (
     <div
       className={styles.group}
-      style={{
-        width: '100%',
-        height: '100%',
-        zIndex: 99999,
-      }}
-     />
+    >
+      {props.children}
+    </div>
   )
 }
 
