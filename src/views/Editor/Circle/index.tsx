@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import styles from './index.module.scss';
-import { CirclePos } from '../../../types';
-import { getClientPosByEvent, changeState } from '../../../utils';
+import { getClientPosByEvent } from '../../../utils';
 
 function Circle (props) {
 
