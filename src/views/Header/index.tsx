@@ -154,8 +154,9 @@ function Header(props) {
       >
         组合
       </Button>
+
       <Button
-        // disabled={containIds.length <= 1}
+        
         btnType="primary"
         onClick={handleSplit}
       >

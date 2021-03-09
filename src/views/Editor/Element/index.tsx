@@ -21,7 +21,6 @@ function Element(props) {
     return null;
   }
   if (!parentId && !children) {
-    console.log(containerProps,'独立模式下的Component渲染')
     return (
       <ResizeWrapper
         index={index}
@@ -34,7 +33,6 @@ function Element(props) {
   }
   // 组合模式下顶层Group渲染
   if (!parentId && type === "group") {
-    console.log(containerProps, '组合模式下顶层Group渲染')
     return (
       <ResizeWrapper
         containerProps={containerProps}
@@ -46,7 +44,6 @@ function Element(props) {
   }
  // 组合模式下 中间层group渲染
   if (parentId && type === "group" && children && children.length > 0) {
-    console.log(children,'中间层group渲染')
     return (
       <div
         style={{

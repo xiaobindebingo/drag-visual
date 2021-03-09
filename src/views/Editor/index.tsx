@@ -4,7 +4,12 @@ import GridLine from "./GridLine";
 import styles from "./index.module.scss";
 import { v4 as uuid } from "uuid";
 import { connect } from 'react-redux';
-import { changeState, getElementPosByEvent, getElementByType, findDOMByEventAndId } from '../../utils';
+import { 
+  changeState, 
+  getElementPosByEvent, 
+  getElementByType, 
+  findDOMByEventAndId,
+} from '../../utils';
 import Element from './Element';
 import MarkLine from './MarkLine';
 import Area from './Area';
@@ -17,7 +22,6 @@ function Editor(props) {
     canvasHeight,
     scale: scaleRatio,
     componentMap,
-    // areaPos,  传不到mouseup里面去,up函数里永远拿到的是initial；
     updateComponentMap,
     updateSelectComponent,
     updateAreaPos,
@@ -48,9 +52,11 @@ function Editor(props) {
   let endTop = -Number.MAX_SAFE_INTEGER;
   containIds.forEach(id => {
     const {left, top, width, height } = componentMap[id].containerProps.style;
+
     if (left < startLeft) {
       startLeft = left;
     } 
+
     if(endLeft < left + width) {
       endLeft = left + width;
     }
@@ -58,9 +64,11 @@ function Editor(props) {
     if (top < startTop) {
       startTop = top;
     } 
+
     if(endTop < top + height) {
       endTop = top + height;
     }
+
   });
 
   return {  
@@ -74,18 +82,23 @@ function Editor(props) {
     }
   }
  }
+
   const handleMouseDown = (e) => {
     e.preventDefault();
     e.stopPropagation();
     updateSelectComponent(null); 
     const dom = findDOMByEventAndId(e, id);
     const { left , top } = dom.getBoundingClientRect();
-    const startPos = getElementPosByEvent(e); // 不要放到move里，否则要加e.presist();
+    const startPos = getElementPosByEvent(e); // 不要在move里执行，否则要加e.presist();
     let areaPos: IArea = initialAreaPos;
+
     const move = (moveEvent) => {
       areaPos = {
         startPos,
-        endPos:  {left: moveEvent.clientX - left, top: moveEvent.clientY - top}, // offsetX 有bug
+        endPos:  {
+          left: moveEvent.clientX - left,
+          top: moveEvent.clientY - top,
+        },
       };
       updateAreaPos(areaPos, []);
     }
@@ -96,7 +109,7 @@ function Editor(props) {
       Object.keys(componentMap).forEach(id => {
         const { startPos, endPos} = areaPos;
         const boxInfo = {
-          left : Math.min(startPos.left, endPos.left),
+          left: Math.min(startPos.left, endPos.left),
           top: Math.min(startPos.top, endPos.top),
           width: Math.abs(endPos.left - startPos.left),
           height: Math.abs(endPos.top - startPos.top),
@@ -112,6 +125,7 @@ function Editor(props) {
             }
           }
        } = componentinfo; 
+
        if (
             boxInfo.left < left && 
             boxInfo.top < top && 
@@ -120,6 +134,7 @@ function Editor(props) {
          ) {
          containIds.push(id);
        }
+
       });
 
       if(containIds.length > 1) {
@@ -187,7 +202,7 @@ function Editor(props) {
         delete copyComponentMap[id];
       }
     });
-    return copyComponentMap
+    return copyComponentMap;
   }
 
   const renderElement = (data) => {
@@ -195,13 +210,19 @@ function Editor(props) {
     return Object.keys(data).map((uuid, index) => {
       const item = data[uuid];
       return (
-      <Element id={uuid} key={uuid} item={item} index={index}>
-       {renderElement(item.children)}
-      </Element>)
-  })
+        <Element 
+          id={uuid} 
+          key={uuid} 
+          item={item} 
+          index={index}
+        >
+          {renderElement(item.children)}
+        </Element>
+      )
+    })
   }
-
   const transferData = converData(componentMap);
+
   return (
     <div 
       id={id} 
@@ -219,7 +240,7 @@ function Editor(props) {
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
       >
-        <GridLine></GridLine>
+        <GridLine />
         {
          renderElement(transferData)
         }

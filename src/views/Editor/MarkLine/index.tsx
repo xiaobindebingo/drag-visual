@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import cls from "classnames";
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { connect } from "react-redux";
-// import events from "../../../eventbus";
+import events from "../../../eventbus";
 import styles from "./index.module.scss";
+import { changeState } from "../../../utils";
 
-const diff = 3;
+const diff: number = 4;
 const initlineArr = [
   {
     type: "xt",
@@ -46,12 +47,18 @@ const initlineArr = [
 ];
 
 function MarkLine(props) {
+  
   const [lineArr, setLineArr] = useState(initlineArr);
-  const { componentMap, selectComponentId, updateCurComponentPos } = props;
+  const { 
+    componentMap, 
+    selectComponentId, 
+    updateCurComponentPos,
+  } = props;
 
-  const isNearly = (dragVal, targetVal) =>
+  const isNearly = (dragVal, targetVal): boolean =>
     Math.abs(dragVal - targetVal) <= diff;
 
+  
   const getCurrentComponentsPosition = () => {
     const currentComponent = componentMap[selectComponentId] || {};
     const { containerProps } = currentComponent || {};
@@ -112,6 +119,8 @@ function MarkLine(props) {
         left: curLeft + curWidth / 2,
         top: curTop + curTop / 2,
       };
+
+
 
       if (isNearly(curCenterPos.top, centerPos.top)) {
         updateLineArr({
@@ -213,11 +222,11 @@ function MarkLine(props) {
       }
 
       if (isNearly(curBottom, bottom) || isNearly(curTop, bottom)) {
-        updateLineArr({
-          type: "xb",
-          left: 0,
-          top: bottom,
-        });
+        // updateLineArr({
+        //   type: "xb",
+        //   left: 0,
+        //   top: bottom,
+        // });
 
         if (isNearly(curBottom, bottom)) {
           updateCurComponentPos({

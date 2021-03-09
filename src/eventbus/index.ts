@@ -1,5 +1,7 @@
+
 class Events {
-  constructor(props) {
+  public events: object;
+  constructor() {
     this.events = {};
   }
   
@@ -11,9 +13,15 @@ class Events {
     }
   }
 
-  emit = (name, args) => {
-    this.events[name].forEach(func => {
-      func.call(null, ...args);
+  emit = (name, args?) => {
+    this.events[name] && this.events[name].forEach(func => {
+      if(args) {
+        func.call(null, ...args);
+      }
+      else {
+        func.call(null,);
+      }
+
     })
   }
 

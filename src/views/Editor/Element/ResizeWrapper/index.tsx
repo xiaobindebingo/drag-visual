@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
 import cls from "classnames";
-import { changeState, getClientPosByEvent } from "../../../../utils";
 import cloneDeep from "lodash/cloneDeep";
+import { changeState, getClientPosByEvent } from "../../../../utils";
 import { CirclePos } from "../../../../types";
 import Circle from "../../Circle";
 import { circleProps } from "./constants";
+import events from '../../../../eventbus';
 import styles from "./index.module.scss";
 
 const updateComponentMapOrder = (id, componentMap) => {
@@ -23,6 +24,7 @@ function ResizeWrapper(props) {
     className,
     containerProps,
     selectComponentId,
+    isNearly,
     updateConatainerPropsStyle,
     updateSelectComponentAndOrderMap,
     componentMap,
@@ -84,21 +86,25 @@ function ResizeWrapper(props) {
     e.preventDefault();
     e.stopPropagation();
     const orderMap = updateComponentMapOrder(id, componentMap);
-    updateSelectComponentAndOrderMap(id, orderMap);
     const { x: startX, y: startY } = getClientPosByEvent(e);
     const left = e.currentTarget.offsetLeft;
     const top = e.currentTarget.offsetTop;
+
+    updateSelectComponentAndOrderMap(id, orderMap);
+
     const move = (moveEvent) => {
       const { x: curX, y: curY } = getClientPosByEvent(moveEvent);
       const curLeft = curX - startX + left;
       const curTop = curY - startY + top;
-
       updateConatainerPropsStyle({
         key: id,
         left: curLeft,
         top: curTop,
       });
+    
+    
     };
+
     const up = () => {
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
@@ -106,6 +112,7 @@ function ResizeWrapper(props) {
     document.addEventListener("mousemove", move);
     document.addEventListener("mouseup", up);
   };
+
   return (
     <div
       ref={wrapper}
