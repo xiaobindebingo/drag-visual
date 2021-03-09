@@ -202,7 +202,6 @@ function Editor(props) {
   }
 
   const transferData = converData(componentMap);
-  console.log(componentMap,'transferData');
   return (
     <div 
       id={id} 

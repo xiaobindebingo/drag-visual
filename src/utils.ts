@@ -81,3 +81,32 @@ export function findDOMByEventAndId(e,id) {
     return element;
   }
 }
+/**
+ * @description 绝对坐标 -> 相对坐标
+ * @param containerPropsStyle 布局盒样式
+ * @param containerBox container
+ * @returns 
+ */
+export const absoluteToRealtiveCoordinate = (containerPropsStyle, containerBox) => {
+  if (!containerPropsStyle) {
+    return { top: 0, left: 0, width: 0, height: 0 };
+  }
+  const { top, left, width, height } = containerPropsStyle;
+  return {
+    left: left - containerBox.left,
+    top: top - containerBox.top,
+    width,
+    height,
+  };
+};
+
+export const realtiveToAbsoluteCoordinate = (containerPropsStyle, containerBox) => {
+  console.log(containerBox,'gggg')
+  const { top, left, width, height } = containerPropsStyle;
+  return {
+    left: left + containerBox.left,
+    top: top + containerBox.top,
+    width,
+    height,
+  };
+}
