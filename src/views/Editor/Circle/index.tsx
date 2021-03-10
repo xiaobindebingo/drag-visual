@@ -3,14 +3,11 @@ import styles from './index.module.scss';
 import { getClientPosByEvent } from '../../../utils';
 
 function Circle (props) {
-
   const { 
     position,
     style,
   } = props;
-
-
-
+  
   const handleMouseDown = (e) => {
     e.preventDefault();
     e.stopPropagation();

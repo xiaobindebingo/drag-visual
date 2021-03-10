@@ -43,7 +43,14 @@ function Element(props) {
         >
           {React.Children.map(children, (child)=>{
             return (
-              <div style={{ position: 'absolute', zIndex: -1}}>
+              <div 
+                style={{ 
+                  position: 'absolute', 
+                  zIndex: -1,
+                  width:'100%',
+                  height:'100%'
+                }}
+              >
                 {child}
               </div>
             )
@@ -69,6 +76,7 @@ function Element(props) {
 
   // 组合模式下，内含的Component渲染
   if (parentId && !children) {
+    console.log(containerProps,'gggg', componentProps)
     return (
       <div
       style={{

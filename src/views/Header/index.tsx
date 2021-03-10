@@ -2,7 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import Button from "../../components/Button";
 import { NumberPicker } from "@ali/wind";
-import { changeState, absoluteToRealtiveCoordinate, realtiveToAbsoluteCoordinate } from "../../utils";
+import { 
+  changeState,
+  absoluteToRealtiveCoordinate,
+  realtiveToAbsoluteCoordinate,
+} from "../../utils";
 import { v4 as uuid } from "uuid";
 import styles from "./index.module.scss";
 
@@ -112,7 +116,6 @@ function Header(props) {
   const handleSplit  = () => {
    const { type }  = componentMap[selectComponentId];
    if (type === 'group') {
-     // pid === selectComponentId
      const splitMap = getSplitComponentMap(selectComponentId);
      updateComponentMap(
       {

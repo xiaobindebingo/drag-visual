@@ -81,32 +81,38 @@ export function findDOMByEventAndId(e,id) {
     return element;
   }
 }
+
+const pxToPercent = val => `${val * 100}%`;
+const percentToPx = (val, percent) => {
+  const ratio = percent.match(/\d+/g)[0] / 100;
+  return `${val * ratio}px`;
+}
 /**
  * @description 绝对坐标 -> 相对坐标
  * @param containerPropsStyle 布局盒样式
- * @param containerBox container
+ * @param innterPropsStyle innterPropsStyle
  * @returns 
  */
-export const absoluteToRealtiveCoordinate = (containerPropsStyle, containerBox) => {
-  if (!containerPropsStyle) {
+export const absoluteToRealtiveCoordinate = (innterPropsStyle, containerBox) => {
+  if (!innterPropsStyle) {
     return { top: 0, left: 0, width: 0, height: 0 };
   }
-  const { top, left, width, height } = containerPropsStyle;
+  const { top, left, width, height } = innterPropsStyle;
   return {
     left: left - containerBox.left,
     top: top - containerBox.top,
-    width,
-    height,
+    width: pxToPercent((width / containerBox.width)),
+    height:  pxToPercent((height / containerBox.height)),
   };
 };
 
-export const realtiveToAbsoluteCoordinate = (containerPropsStyle, containerBox) => {
+export const realtiveToAbsoluteCoordinate = (innterPropsStyle, containerBox) => {
   console.log(containerBox,'gggg')
-  const { top, left, width, height } = containerPropsStyle;
+  const { top, left, width, height } = innterPropsStyle;
   return {
     left: left + containerBox.left,
     top: top + containerBox.top,
-    width,
-    height,
+    width: percentToPx(containerBox.width, width),
+    height:  percentToPx(containerBox.width, height),
   };
 }
