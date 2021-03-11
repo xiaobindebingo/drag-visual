@@ -56,7 +56,7 @@ function Editor(props) {
     const childs =  findChildrenIdBySelectId(parentId);
     debugger;
     childs.forEach(id => {
-        deleteGroup(id, copyState)
+      deleteElement(id, copyState)
      });
    } else {
     delete copyState[parentId]
