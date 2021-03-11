@@ -21,11 +21,13 @@ const initialState = {
         
 }
 
-function reducer(state = initialState, action) {
+export function reducer(state = initialState, action) {
+
   if (typeof state === 'undefined') {
     return {}
   }
   if (action.type === 'save') {
+    console.log(action.payload, 'payload');
     return {
       ...state,
       ...action.payload,

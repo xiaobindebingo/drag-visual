@@ -52,7 +52,6 @@ function MarkLine(props) {
     componentMap, 
     selectComponentId, 
     updateCurComponentPos,
-    updateIsNearly,
   } = props;
 
   const isNearly = (dragVal, targetVal): boolean => {
@@ -279,7 +278,5 @@ export default connect(
   (dispatch) => ({
     updateCurComponentPos: (val) =>
       dispatch({ type: "updateCurComponentPos", payload: val }),
-    updateIsNearly: (val) => 
-      dispatch(changeState('isNearly',val)),
   })
 )(MarkLine);

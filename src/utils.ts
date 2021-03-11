@@ -9,6 +9,13 @@ export function changeBatchState(obj) {
 }
 
 export function changeState(key, newVal?) {
+
+  if (Object.prototype.toString.call(key) === "[object Object]") {
+    return {
+      type: 'save',
+      payload: key,
+    }
+  }
   if (Array.isArray(key)) {
     const payload = key.reduce((prev ,cur)=>{
       return {
@@ -104,7 +111,6 @@ export const absoluteToRealtiveCoordinate = (innterPropsStyle, containerBox) => 
     width: pxToPercent((width / containerBox.width)),
     height:  pxToPercent((height / containerBox.height)),
   };
-  console.log(result,'gggg');
   return result;
 };
 

@@ -89,9 +89,7 @@ function ResizeWrapper(props) {
     const top = e.currentTarget.offsetTop;
 
     updateSelectComponentAndOrderMap(id, orderMap);
-    let hasMove = false
     const move = (moveEvent) => {
-      hasMove = true;
       const { x: curX, y: curY } = getClientPosByEvent(moveEvent);
       const curLeft = curX - startX + left;
       const curTop = curY - startY + top;
@@ -157,14 +155,12 @@ export default connect(
       }),
       updateSelectComponentAndOrderMap: (selectComponentId, componentMap) =>
       dispatch(
-        changeState([
+        changeState(
           {
             selectComponentId,
-          },
-          {
             componentMap,
           },
-        ])
+        )
       ),
   })
 )(ResizeWrapper);

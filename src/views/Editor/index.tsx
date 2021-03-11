@@ -13,6 +13,8 @@ import {
 import Element from './Element';
 import MarkLine from './MarkLine';
 import Area from './Area';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
+
 import { IArea } from '../../interface';
 
 export const id = 'editorWrapper';
@@ -23,8 +25,10 @@ function Editor(props) {
     scale: scaleRatio,
     componentMap,
     updateComponentMap,
+    updateComponentMapAndSelectId,
     updateSelectComponent,
     updateAreaPos,
+    selectComponentId,
   } = props;
 
   const initialAreaPos = {
@@ -40,6 +44,32 @@ function Editor(props) {
  const hideArea = () => {
    updateAreaPos(initialAreaPos, [])
  }
+
+ const findChildrenIdBySelectId = (selectedId) => {
+   return Object.keys(componentMap).filter((id) => {
+      return componentMap[id].parentId === selectedId
+   })
+ }
+ const deleteElement = (parentId, copyState) => {
+  const { type } = copyState[parentId];
+  if (type === 'group') {
+    const childs =  findChildrenIdBySelectId(parentId);
+    debugger;
+    childs.forEach(id => {
+        deleteGroup(id, copyState)
+     });
+   } else {
+    delete copyState[parentId]
+   }
+ }
+ const handleKey = (key) => {
+   const copyState = cloneDeep(componentMap);
+   const { type } = copyState[selectComponentId];
+   deleteElement(selectComponentId, copyState);
+   // 清除selectedId和更新componentMap属性
+   updateComponentMapAndSelectId(copyState, null)
+  }
+
  /**
   * @description 计算组合最小包围盒子
   * @param containIds 
@@ -174,15 +204,15 @@ function Editor(props) {
           height,
         }
       };
-
-      updateComponentMap({
+      const updatedMap = {
         ...componentMap,
         [uuid()]: {
           type,
           containerProps,
           componentProps,
         }
-      });
+      };
+      updateComponentMap(updatedMap);
     }
   }
 
@@ -234,6 +264,10 @@ function Editor(props) {
         transform: `scale(${scaleRatio /100})`
       }}
     >
+      <KeyboardEventHandler
+        handleKeys={['all']}
+        onKeyEvent={handleKey}
+      />
       <div
         onMouseDown={handleMouseDown}
         style={{ position: "absolute", width: "100%", height: "100%" }}
@@ -257,6 +291,9 @@ export default connect(
   dispatch => ({
     updateComponentMap: (val) => dispatch(changeState('componentMap', val)),
     updateSelectComponent: (id) => dispatch(changeState("selectComponentId", id)),
-    updateAreaPos: (position, containIds) => dispatch(changeState([{areaPos: position}, {containIds}])),
+    updateAreaPos: (position, containIds) => dispatch(changeState({areaPos: position, containIds})),
+    updateComponentMapAndSelectId: (val, id) =>{
+      dispatch(changeState({componentMap: val, selectComponentId: id}))
+    } 
   })
   )(Editor);

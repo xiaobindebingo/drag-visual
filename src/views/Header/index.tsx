@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Button from "../../components/Button";
 import { NumberPicker } from "@ali/wind";
-import { 
+import {
   changeState,
   absoluteToRealtiveCoordinate,
   realtiveToAbsoluteCoordinate,
@@ -16,15 +16,16 @@ function Header(props) {
     canvasWidth,
     canvasHeight,
     scale,
-    updateComponentMap,
+    updateState,
     changeWidth,
     changeHeight,
     changeScale,
-    areaPos: { startPos, endPos },
+    areaPos,
     componentMap,
     selectComponentId,
   } = props;
 
+  const  { startPos, endPos } = areaPos;
   const boxInfo = {
     left: Math.min(startPos.left, endPos.left),
     top: Math.min(startPos.top, endPos.top),
@@ -43,51 +44,51 @@ function Header(props) {
               ...componentMap[id].containerProps,
               style: absoluteToRealtiveCoordinate(
                 componentMap[id].containerProps?.style,
-                boxInfo,
+                boxInfo
               ),
             },
             parentId,
           },
         };
       }
-      return {...prev,[id]: componentMap[id]};
+      return { ...prev, [id]: componentMap[id] };
     }, {});
   };
 
-  const getSplitComponentMap = selectId => {
-   return Object.keys(componentMap).reduce((prev, id)=> {
+  const getSplitComponentMap = (selectId) => {
+    return Object.keys(componentMap).reduce((prev, id) => {
       const item = componentMap[id];
-     if (item.parentId === selectId) {
-       return {
-         ...prev,
-         [id]: {
-           ...item,
-           parentId: null,
-           containerProps: {
-             ...componentMap[id].containerProps,
-             style: realtiveToAbsoluteCoordinate(
-               componentMap[id].containerProps?.style,
-               componentMap[selectId].containerProps.style,
-             ),
-           }
-         }
-       }
-     } else if(selectId !== id){
-       return {
-         ...prev,
-         [id]: item,
-       }
-     } else {
-       return {...prev}
-     }
-    },{});
-  }
+      if (item.parentId === selectId) {
+        return {
+          ...prev,
+          [id]: {
+            ...item,
+            parentId: null,
+            containerProps: {
+              ...componentMap[id].containerProps,
+              style: realtiveToAbsoluteCoordinate(
+                componentMap[id].containerProps?.style,
+                componentMap[selectId].containerProps.style
+              ),
+            },
+          },
+        };
+      } else if (selectId !== id) {
+        return {
+          ...prev,
+          [id]: item,
+        };
+      } else {
+        return { ...prev };
+      }
+    }, {});
+  };
 
   const handleCombine = () => {
     const parentId = uuid();
     const combineMap = getCombineComponentMap(parentId);
-    updateComponentMap(
-      {
+    const newState = {
+      componentMap: {
         ...combineMap,
         [parentId]: {
           type: "group",
@@ -97,36 +98,36 @@ function Header(props) {
             },
           },
         },
+    },
+    selectComponentId: parentId,
+    containIds: [],
+    areaPos: {
+      startPos: {
+        left: 0,
+        top: 0,
       },
-      parentId,
-      [], // 组合按钮变成禁用
-      {
-        startPos: { // 重置框选
-          left: 0,
-          top: 0,
-        },
-        endPos: {
-          left: 0,
-          top: 0,
-        }
+      endPos: {
+        left: 0,
+        top: 0,
       }
-    );
+    },
+  }
+    updateState(newState);
   };
 
-  const handleSplit  = () => {
-   const { type }  = componentMap[selectComponentId];
-   if (type === 'group') {
-     const splitMap = getSplitComponentMap(selectComponentId);
-     updateComponentMap(
-      {
-        ...splitMap,
-      },
-      '',
-      [],
-      { startPos, endPos }
-     )
-   }
-  }
+  const handleSplit = () => {
+    const { type } = componentMap[selectComponentId];
+    if (type === "group") {
+      const splitMap = getSplitComponentMap(selectComponentId);
+      const newState = {
+        componentMap: {...splitMap},
+        selectComponentId: '',
+        containIds: [],
+        areaPos,
+      }
+      updateState(newState);
+    }
+  };
 
   return (
     <div className={styles.header}>
@@ -157,11 +158,10 @@ function Header(props) {
       >
         组合
       </Button>
-
       <Button
-        disabled = {
-          !componentMap[selectComponentId] || 
-          componentMap[selectComponentId].type !== 'group'
+        disabled={
+          !componentMap[selectComponentId] ||
+          componentMap[selectComponentId].type !== "group"
         }
         btnType="primary"
         onClick={handleSplit}
@@ -179,43 +179,8 @@ export default connect(
       changeWidth: (val) => dispatch(changeState("canvasWidth", val)),
       changeHeight: (val) => dispatch(changeState("canvasHeight", val)),
       changeScale: (val) => dispatch(changeState("scale", val)),
-      updateComponentMap: (val, id, containIds ,pos?) =>{
-        if(!pos) {
-          dispatch(
-            changeState([
-              {
-                componentMap: val,
-              },
-              {
-                selectComponentId: id,
-              },
-              {
-                containIds,
-              },
-              // {
-              //   areaPos: pos,
-              // }
-            ])
-          );
-        }
-        dispatch(
-          changeState([
-            {
-              componentMap: val,
-            },
-            {
-              selectComponentId: id,
-            },
-            {
-              containIds,
-            },
-            {
-              areaPos: pos,
-            }
-          ])
-        );
-      }
-       
+      updateState: (val) => dispatch(changeState(val)),
     };
   }
-)(Header);
+
+)(Header)

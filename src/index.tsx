@@ -11,6 +11,7 @@ import styles from './index.module.css';
 import '@ali/wind/dist/wind.min.css';
 
 const Parent = () => {
+
   return (
     <div className={styles.container}>
       <Header></Header>
