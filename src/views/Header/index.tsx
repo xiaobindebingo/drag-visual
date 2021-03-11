@@ -135,7 +135,7 @@ function Header(props) {
         onChange={(val) => changeWidth(val)}
         className={styles.numberPicker}
         value={canvasWidth}
-      />{" "}
+      />
       *
       <NumberPicker
         onChange={(val) => changeHeight(val)}
@@ -148,7 +148,7 @@ function Header(props) {
         min={0}
         onChange={(val) => changeScale(val)}
         value={scale}
-      />{" "}
+      />
       %
       <Button
         disabled={containIds.length <= 1}

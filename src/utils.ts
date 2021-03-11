@@ -59,7 +59,7 @@ export function mixinObject (oldObj, newObj) {
       result[key] = newObj[key]
     }
     if (typeof oldObj[key] === 'object' && typeof newObj[key] === 'object') {
-      result[key] = mixinObject(oldObj[key], newObj[key])
+      result[key] = mixinObject(oldObj[key], newObj[key]);
     }
     if(typeof oldObj[key] !== 'object' && typeof newObj[key] !== 'object') {
       result[key] = newObj[key];
@@ -85,7 +85,7 @@ export function findDOMByEventAndId(e,id) {
 const pxToPercent = val => `${val * 100}%`;
 const percentToPx = (val, percent) => {
   const ratio = percent.match(/\d+/g)[0] / 100;
-  return `${val * ratio}px`;
+  return val * ratio;
 }
 /**
  * @description 绝对坐标 -> 相对坐标
@@ -98,21 +98,25 @@ export const absoluteToRealtiveCoordinate = (innterPropsStyle, containerBox) => 
     return { top: 0, left: 0, width: 0, height: 0 };
   }
   const { top, left, width, height } = innterPropsStyle;
-  return {
-    left: left - containerBox.left,
-    top: top - containerBox.top,
+  const result = {
+    left: pxToPercent((left - containerBox.left) / containerBox.width),
+    top: pxToPercent((top - containerBox.top) / containerBox.height),
     width: pxToPercent((width / containerBox.width)),
     height:  pxToPercent((height / containerBox.height)),
   };
+  console.log(result,'gggg');
+  return result;
 };
 
 export const realtiveToAbsoluteCoordinate = (innterPropsStyle, containerBox) => {
-  console.log(containerBox,'gggg')
+
   const { top, left, width, height } = innterPropsStyle;
-  return {
-    left: left + containerBox.left,
-    top: top + containerBox.top,
+  const result = {
+    left: percentToPx(containerBox.width,left) + containerBox.left,
+    top: percentToPx(containerBox.height, top) + containerBox.top,
     width: percentToPx(containerBox.width, width),
-    height:  percentToPx(containerBox.width, height),
-  };
+    height: percentToPx(containerBox.height, height),
+  }
+
+  return  result;
 }
