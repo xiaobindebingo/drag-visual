@@ -7,6 +7,7 @@ import Header from './views/Header';
 import ComponentList from './views/ComponentPanel';
 import Editor from './views/Editor';
 import AttributePanel from './views/AttributePanel';
+import Preview from './views/Preview';
 import styles from './index.module.css';
 import '@ali/wind/dist/wind.min.css';
 
@@ -21,6 +22,7 @@ const Parent = () => {
           <Editor />
         </div>
         <AttributePanel />
+        <Preview />
       </div>
     </div>
   )

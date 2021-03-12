@@ -1,5 +1,6 @@
 export const initialState = {
-  componentMap: {}, // {uuid: {type:'componentType', containerProps, componentProps}}
+  componentMap: {},
+  previewVisible: false,
   canvasWidth: 1200,
   canvasHeight: 750,
   scale: 100,

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import Button from "../../components/Button";
-import { NumberPicker } from "@ali/wind";
+// import Button from "../../components/Button";
+import { NumberPicker, Button } from "@ali/wind";
 import {
   changeState,
   absoluteToRealtiveCoordinate,
@@ -17,22 +17,24 @@ import {
 
 function Header(props) {
   const {
-    containIds,
-    canvasWidth,
-    canvasHeight,
-    scale,
-    updateState,
+    model,
     changeWidth,
     changeHeight,
     changeScale,
-    areaPos,
-    componentMap,
-    selectComponentId,
+    updateState,
     addRecords,
     cancelRecords,
     redoRecords,
   } = props;
-
+  const {
+    containIds,
+    canvasWidth,
+    canvasHeight,
+    scale,
+    areaPos,
+    componentMap,
+    selectComponentId,
+  } = model;
   const  { startPos, endPos } = areaPos;
   const boxInfo = {
     left: Math.min(startPos.left, endPos.left),
@@ -139,14 +141,6 @@ function Header(props) {
     }
   };
 
-  const handleCancle = () => {
-    cancelRecords()
-  }
-
-  const handleRedo = () => {
-    redoRecords();
-  }
-
   return (
     <div className={styles.header}>
       宽 * 高
@@ -170,35 +164,43 @@ function Header(props) {
       />
       %
       <Button
+        type="primary"
         disabled={containIds.length <= 1}
-        btnType="primary"
         onClick={handleCombine}
       >
         组合
       </Button>
       <Button
+        type="secondary"
         disabled={
           !componentMap[selectComponentId] ||
           componentMap[selectComponentId].type !== "group"
         }
-        btnType="primary"
         onClick={handleSplit}
       >
         拆分
       </Button>
-      <Button onClick={handleCancle}>
+      <Button onClick={cancelRecords}>
         撤销
       </Button>
-      <Button onClick={handleRedo}>
+      <Button onClick={redoRecords}>
         重做
       </Button>
-      
+      <Button 
+      onClick={
+        () => updateState({
+          ...model,
+          previewVisible: true,
+        })
+      }>
+        预览
+      </Button>
     </div>
   );
 }
 
 export default connect(
-  (state) => state,
+  (state) => ({model: state}),
   (dispatch) => {
     return {
       changeWidth: (val) => dispatch(changeState("canvasWidth", val)),
