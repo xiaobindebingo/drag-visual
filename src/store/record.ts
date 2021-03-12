@@ -32,7 +32,6 @@ class Record {
     if(this.list.length > this.maxLength) {
       this.list.shift();
     }
-    // console.log(this.list.length,'length');
     this.curIndex = this.list.length - 1;
   }
   getPrevRecord() {

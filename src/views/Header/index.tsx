@@ -9,7 +9,11 @@ import {
 } from "../../utils";
 import { v4 as uuid } from "uuid";
 import styles from "./index.module.scss";
-import { cancelRecords, redoRecords } from "../../store/actions";
+import { 
+  cancelRecords, 
+  redoRecords, 
+  saveRecords,
+} from "../../store/actions";
 
 function Header(props) {
   const {
@@ -24,7 +28,7 @@ function Header(props) {
     areaPos,
     componentMap,
     selectComponentId,
-    records,
+    addRecords,
     cancelRecords,
     redoRecords,
   } = props;
@@ -89,6 +93,7 @@ function Header(props) {
   };
 
   const handleCombine = () => {
+    addRecords();
     const parentId = uuid();
     const combineMap = getCombineComponentMap(parentId);
     const newState = {
@@ -120,6 +125,7 @@ function Header(props) {
   };
 
   const handleSplit = () => {
+    addRecords();
     const { type } = componentMap[selectComponentId];
     if (type === "group") {
       const splitMap = getSplitComponentMap(selectComponentId);
@@ -200,7 +206,8 @@ export default connect(
       changeScale: (val) => dispatch(changeState("scale", val)),
       updateState: (val) => dispatch(changeState(val)),
       cancelRecords: step => dispatch(cancelRecords(step)),
-      redoRecords: ()=> dispatch(redoRecords()),
+      redoRecords: () => dispatch(redoRecords()),
+      addRecords: ()=> dispatch(saveRecords())
     };
   }
 

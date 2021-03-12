@@ -14,12 +14,15 @@ import {
 import Element from './Element';
 import MarkLine from './MarkLine';
 import Area from './Area';
-
 import { IArea } from '../../interface';
-import { cancelRecords, redoRecords, saveRecords } from "../../store/actions";
-import record from "../../store/record";
+import { 
+  cancelRecords, 
+  redoRecords, 
+  saveRecords,
+} from "../../store/actions";
 
-export const id = 'editorWrapper';
+const id = 'editorWrapper';
+
 function Editor(props) {
   const [showGridLine, toggleGridLine] = useState(false);
   const {
@@ -28,7 +31,6 @@ function Editor(props) {
     updateComponentMapAndSelectId,
     updateSelectComponent,
     updateAreaPos,
-    selectComponentId,
     addRecords,
     cancelRecords,
     redoRecords,
@@ -39,6 +41,7 @@ function Editor(props) {
     canvasHeight,
     scale: scaleRatio,
     componentMap,
+    selectComponentId,
   }= model;
 
   const initialAreaPos = {
@@ -62,6 +65,7 @@ function Editor(props) {
  }
 
  const deleteElement = (parentId, copyState) => {
+
   const { type } = copyState[parentId];
   if (type === 'group') {
     const childs =  findChildrenIdBySelectId(parentId);
@@ -77,7 +81,6 @@ function Editor(props) {
    const keyHandleMap = {
      'backspace': () => {
       const copyState = cloneDeep(componentMap);
-      // const { type } = copyState[selectComponentId];
       deleteElement(selectComponentId, copyState);
       // 清除selectedId和更新componentMap属性
       updateComponentMapAndSelectId(copyState, null)
@@ -89,7 +92,7 @@ function Editor(props) {
        // 撤销
        cancelRecords();
      },
-     'cmd+.': () => {
+     'cmd+shift+z': () => {
        // 重做
        redoRecords();
      }
@@ -296,7 +299,7 @@ function Editor(props) {
       }}
     >
       <KeyboardEventHandler
-        handleKeys={['backspace', 'cmd+h', 'cmd+z', 'cmd+.']}
+        handleKeys={['backspace', 'cmd+h', 'cmd+z', 'cmd+shift+z']}
         onKeyEvent={handleKey}
       />
       <div
