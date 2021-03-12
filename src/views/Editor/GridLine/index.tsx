@@ -1,8 +1,15 @@
 import React from 'react';
 
-export default function GridLine () {
+export default function GridLine (props) {
+  const { show } = props;
+  
+  if (!show) {
+    return null;
+  }
+
   return (
-     <svg className="grid" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+     <svg 
+     className="grid" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <pattern id="smallGrid" width="7.236328125" height="7.236328125" patternUnits="userSpaceOnUse">
                 <path 

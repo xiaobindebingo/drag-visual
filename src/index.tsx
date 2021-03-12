@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
+import Stats from 'stats-js';
 import store from './store';
 import {Provider} from 'react-redux';
-import "./styles/index.scss";
 import Header from './views/Header';
 import ComponentList from './views/ComponentPanel';
 import Editor from './views/Editor';
@@ -32,3 +32,19 @@ ReactDOM.render(
     <Parent />
   </Provider>
 , document.getElementById("root"));
+
+const stats = new Stats();
+stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild( stats.dom );
+
+function animate() {
+ 
+    stats.begin();
+ 
+    stats.end();
+ 
+    requestAnimationFrame( animate );
+ 
+}
+ 
+requestAnimationFrame( animate );

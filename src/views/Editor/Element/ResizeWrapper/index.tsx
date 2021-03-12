@@ -8,6 +8,8 @@ import Circle from "../../Circle";
 import { circleProps } from "./constants";
 import events from '../../../../eventbus';
 import styles from "./index.module.scss";
+import { saveRecords } from "../../../../store/actions";
+import record from "../../../../store/record";
 
 const updateComponentMapOrder = (id, componentMap) => {
   const copyObj = cloneDeep(componentMap);
@@ -18,16 +20,21 @@ const updateComponentMapOrder = (id, componentMap) => {
 
 function ResizeWrapper(props) {
   const {
-    id,
+    containerProps,
+    model,
     index,
     style,
     className,
-    containerProps,
-    selectComponentId,
+    id,
     updateConatainerPropsStyle,
     updateSelectComponentAndOrderMap,
-    componentMap,
+    addRecord,
   } = props;
+
+  const {
+    componentMap,
+    selectComponentId,
+  } = model;
 
   const wrapper = useRef<any>({});
   const { offsetWidth, offsetHeight, offsetLeft, offsetTop } = wrapper.current;
@@ -103,6 +110,7 @@ function ResizeWrapper(props) {
     };
 
     const up = () => {
+      addRecord();
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
     };
@@ -134,6 +142,7 @@ function ResizeWrapper(props) {
         circleProps.map((circleProp) => {
           return (
             <Circle
+              addRecord={addRecord}
               updateComponentItemByPos={updateComponentItemByPos}
               key={circleProp.position}
               {...circleProp}
@@ -146,7 +155,9 @@ function ResizeWrapper(props) {
 }
 
 export default connect(
-  (state) => state,
+  (state) => ({
+    model: state
+  }),
   (dispatch) => ({
     updateConatainerPropsStyle: (val) =>
       dispatch({
@@ -162,5 +173,6 @@ export default connect(
           },
         )
       ),
+      addRecord: () => dispatch(saveRecords()),
   })
 )(ResizeWrapper);

@@ -1,11 +1,13 @@
 import React from 'react';
 import styles from './index.module.scss';
 import { getClientPosByEvent } from '../../../utils';
+import record from '../../../store/record';
 
 function Circle (props) {
   const { 
     position,
     style,
+    addRecord,
   } = props;
   
   const handleMouseDown = (e) => {
@@ -26,6 +28,7 @@ function Circle (props) {
     }
 
     const up = () => {
+      addRecord();
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
     }

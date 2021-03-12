@@ -117,7 +117,6 @@ export const mockTreeData = [
     }
     
     render(){
-      console.log('render')
       return(
         <div onClick={this.handleClick.bind(this)}>
           {this.state.count}

@@ -1,29 +1,29 @@
-const initialState = {
-  componentMap: {}, // {uuid: {type:'componentType', containerProps, componentProps}}
-  canvasWidth: 1200,
-  canvasHeight: 750,
-  scale: 100,
-  selectComponentId: "",
-  containIds: [],
-  areaPos: {
-    startPos: {
-      left: 0,
-      top: 0,
-    },
-    endPos: {
-      left: 0,
-      top: 0,
-    },
-  },
-};
+import * as actionTypes from "./actionType";
+import record, { initialState } from "./record";
+
+
 function reducer(state = initialState, action) {
   if (typeof state === "undefined") {
     return {};
   }
+
+  if (action.type === actionTypes.SAVE_RECORDS) {
+    record.addRecord(state);
+    return state;
+  }
+
+  if (action.type === actionTypes.CANCEL_RECORDS) {
+    const curState = record.getPrevRecord();
+    return curState;
+  }
+  if (action.type === actionTypes.REDO) {
+    const curState = record.getNextRecord();
+    return curState;
+  }
   if (action.type === "save") {
     return {
-        ...state,
-        ...action.payload,
+      ...state,
+      ...action.payload,
     };
   }
 

@@ -9,6 +9,7 @@ import {
 } from "../../utils";
 import { v4 as uuid } from "uuid";
 import styles from "./index.module.scss";
+import { cancelRecords, redoRecords } from "../../store/actions";
 
 function Header(props) {
   const {
@@ -23,6 +24,9 @@ function Header(props) {
     areaPos,
     componentMap,
     selectComponentId,
+    records,
+    cancelRecords,
+    redoRecords,
   } = props;
 
   const  { startPos, endPos } = areaPos;
@@ -129,6 +133,14 @@ function Header(props) {
     }
   };
 
+  const handleCancle = () => {
+    cancelRecords()
+  }
+
+  const handleRedo = () => {
+    redoRecords();
+  }
+
   return (
     <div className={styles.header}>
       宽 * 高
@@ -168,6 +180,13 @@ function Header(props) {
       >
         拆分
       </Button>
+      <Button onClick={handleCancle}>
+        撤销
+      </Button>
+      <Button onClick={handleRedo}>
+        重做
+      </Button>
+      
     </div>
   );
 }
@@ -180,6 +199,8 @@ export default connect(
       changeHeight: (val) => dispatch(changeState("canvasHeight", val)),
       changeScale: (val) => dispatch(changeState("scale", val)),
       updateState: (val) => dispatch(changeState(val)),
+      cancelRecords: step => dispatch(cancelRecords(step)),
+      redoRecords: ()=> dispatch(redoRecords()),
     };
   }
 

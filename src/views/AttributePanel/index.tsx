@@ -9,7 +9,7 @@ function AttributePanel(props) {
     containerProps,
     componentProps,
   } = componentMap[selectComponentId] || {};
-  // debugger;
+
   return (
     selectComponentId && 
     <div className={styles.attributePanel}>
@@ -19,10 +19,9 @@ function AttributePanel(props) {
       height: {containerProps.style.height}
       {/* <Input.TextArea
         rows={20}
-        value={value} 
-        onChange= {handleChange}
-      />
-      <Button type="primary" onClick={handleClick}>确定</Button> */}
+        value={JSON.stringify(containerProps)} 
+        // onChange= {handleChange}
+      /> */}
     </div>
   );
 }

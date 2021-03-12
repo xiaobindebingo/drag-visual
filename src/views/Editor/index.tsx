@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import cloneDeep from 'lodash/cloneDeep';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 import GridLine from "./GridLine";
 import styles from "./index.module.scss";
 import { v4 as uuid } from "uuid";
@@ -13,23 +14,32 @@ import {
 import Element from './Element';
 import MarkLine from './MarkLine';
 import Area from './Area';
-import KeyboardEventHandler from 'react-keyboard-event-handler';
 
 import { IArea } from '../../interface';
+import { cancelRecords, redoRecords, saveRecords } from "../../store/actions";
+import record from "../../store/record";
 
 export const id = 'editorWrapper';
 function Editor(props) {
+  const [showGridLine, toggleGridLine] = useState(false);
   const {
-    canvasWidth,
-    canvasHeight,
-    scale: scaleRatio,
-    componentMap,
+    model,
     updateComponentMap,
     updateComponentMapAndSelectId,
     updateSelectComponent,
     updateAreaPos,
     selectComponentId,
+    addRecords,
+    cancelRecords,
+    redoRecords,
   } = props;
+
+  const {
+    canvasWidth,
+    canvasHeight,
+    scale: scaleRatio,
+    componentMap,
+  }= model;
 
   const initialAreaPos = {
     startPos: {
@@ -50,11 +60,11 @@ function Editor(props) {
       return componentMap[id].parentId === selectedId
    })
  }
+
  const deleteElement = (parentId, copyState) => {
   const { type } = copyState[parentId];
   if (type === 'group') {
     const childs =  findChildrenIdBySelectId(parentId);
-    debugger;
     childs.forEach(id => {
       deleteElement(id, copyState)
      });
@@ -62,12 +72,32 @@ function Editor(props) {
     delete copyState[parentId]
    }
  }
+
  const handleKey = (key) => {
-   const copyState = cloneDeep(componentMap);
-   const { type } = copyState[selectComponentId];
-   deleteElement(selectComponentId, copyState);
-   // 清除selectedId和更新componentMap属性
-   updateComponentMapAndSelectId(copyState, null)
+   const keyHandleMap = {
+     'backspace': () => {
+      const copyState = cloneDeep(componentMap);
+      // const { type } = copyState[selectComponentId];
+      deleteElement(selectComponentId, copyState);
+      // 清除selectedId和更新componentMap属性
+      updateComponentMapAndSelectId(copyState, null)
+     },
+     'cmd+h': () => {
+       toggleGridLine(!showGridLine)
+     },
+     'cmd+z': () => {
+       // 撤销
+       cancelRecords();
+     },
+     'cmd+.': () => {
+       // 重做
+       redoRecords();
+     }
+   }
+
+   keyHandleMap[key]();
+
+ 
   }
 
  /**
@@ -213,6 +243,7 @@ function Editor(props) {
         }
       };
       updateComponentMap(updatedMap);
+      addRecords();
     }
   }
 
@@ -265,7 +296,7 @@ function Editor(props) {
       }}
     >
       <KeyboardEventHandler
-        handleKeys={['all']}
+        handleKeys={['backspace', 'cmd+h', 'cmd+z', 'cmd+.']}
         onKeyEvent={handleKey}
       />
       <div
@@ -274,7 +305,7 @@ function Editor(props) {
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
       >
-        <GridLine />
+        <GridLine show={showGridLine} />
         {
          renderElement(transferData)
         }
@@ -287,13 +318,16 @@ function Editor(props) {
 }
 
 export default connect(
-  state => state, 
+  state => ({model: state}), 
   dispatch => ({
     updateComponentMap: (val) => dispatch(changeState('componentMap', val)),
     updateSelectComponent: (id) => dispatch(changeState("selectComponentId", id)),
     updateAreaPos: (position, containIds) => dispatch(changeState({areaPos: position, containIds})),
-    updateComponentMapAndSelectId: (val, id) =>{
+    updateComponentMapAndSelectId: (val, id) => {
       dispatch(changeState({componentMap: val, selectComponentId: id}))
-    } 
+    },
+    addRecords: () => dispatch(saveRecords()),
+    cancelRecords: step => dispatch(cancelRecords(step)),
+    redoRecords: ()=> dispatch(redoRecords()),
   })
   )(Editor);
