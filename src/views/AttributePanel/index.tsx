@@ -27,10 +27,4 @@ function AttributePanel(props) {
 }
 
 export default connect((state) => state, (dispatch)=>({
-  changeComponentAttribute: (val,id) => {
-    dispatch({
-      type: 'updateComponent',
-      payload: {key: id, itemProps:val }
-    })
-  }
 }))(AttributePanel);

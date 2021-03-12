@@ -3,7 +3,9 @@ import cls from "classnames";
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { connect } from "react-redux";
 import styles from "./index.module.scss";
-import { changeState } from "../../../utils";
+import {
+  updateCurContainerStyleAction,
+} from '../../../store/actions'
 
 const diff: number = 4;
 const initlineArr = [
@@ -51,7 +53,7 @@ function MarkLine(props) {
   const { 
     componentMap, 
     selectComponentId, 
-    updateCurComponentPos,
+    updateCurContainerStyle,
   } = props;
 
   const isNearly = (dragVal, targetVal): boolean => {
@@ -128,7 +130,7 @@ function MarkLine(props) {
           top: centerPos.top,
           left: 0,
         });
-        updateCurComponentPos({
+        updateCurContainerStyle({
           top: top - (curHeight - height) / 2,
           left: curLeft,
         });
@@ -141,7 +143,7 @@ function MarkLine(props) {
           left: centerPos.left,
         });
 
-        updateCurComponentPos({
+        updateCurContainerStyle({
           top: curTop,
           left: left - (curWidth - width) / 2,
         });
@@ -163,14 +165,14 @@ function MarkLine(props) {
         });
 
         if (isNearly(curTop, top)) {
-          updateCurComponentPos({
+          updateCurContainerStyle({
             top,
             left: curLeft,
           });
         }
 
         if (isNearly(curBottom, top)) {
-          updateCurComponentPos({
+          updateCurContainerStyle({
             top: top - curHeight,
             left: curLeft,
           });
@@ -185,14 +187,14 @@ function MarkLine(props) {
         });
 
         if (isNearly(curLeft, left)) {
-          updateCurComponentPos({
+          updateCurContainerStyle({
             left,
             top: curTop,
           });
         }
 
         if (isNearly(curRight, left)) {
-          updateCurComponentPos({
+          updateCurContainerStyle({
             left: left - curWidth,
             top: curTop,
           });
@@ -207,14 +209,14 @@ function MarkLine(props) {
         });
 
         if (isNearly(curRight, right)) {
-          updateCurComponentPos({
+          updateCurContainerStyle({
             left: right - curWidth,
             top: curTop,
           });
         }
 
         if (isNearly(curLeft, right)) {
-          updateCurComponentPos({
+          updateCurContainerStyle({
             left: right,
             top: curTop,
           });
@@ -222,21 +224,21 @@ function MarkLine(props) {
       }
 
       if (isNearly(curBottom, bottom) || isNearly(curTop, bottom)) {
-        // updateLineArr({
-        //   type: "xb",
-        //   left: 0,
-        //   top: bottom,
-        // });
+        updateLineArr({
+          type: "xb",
+          left: 0,
+          top: bottom,
+        });
 
         if (isNearly(curBottom, bottom)) {
-          updateCurComponentPos({
+          updateCurContainerStyle({
             left: curLeft,
             top: top + height - curHeight,
           });
         }
 
         if (isNearly(curTop, bottom)) {
-          updateCurComponentPos({
+          updateCurContainerStyle({
             left: curLeft,
             top: height + top,
           });
@@ -276,7 +278,7 @@ function MarkLine(props) {
 export default connect(
   (state) => state,
   (dispatch) => ({
-    updateCurComponentPos: (val) =>
-      dispatch({ type: "updateCurComponentPos", payload: val }),
+    updateCurContainerStyle: (val) =>
+      dispatch(updateCurContainerStyleAction(val)),
   })
 )(MarkLine);

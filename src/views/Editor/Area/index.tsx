@@ -11,7 +11,6 @@ function Area(props) {
     },
     // containerProps,
     // selectComponentId,
-    // updateConatainerPropsStyle,
     // updateSelectComponent, 
   } = props;
   const width = Math.abs(endPos.left - startPos.left);

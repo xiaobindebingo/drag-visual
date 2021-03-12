@@ -1,72 +1,18 @@
 import * as actionTypes from "./actionType";
-import record, { initialState } from "./record";
+import record from "./record";
 
+function reducer(state = record.list[0], action) {
 
-function reducer(state = initialState, action) {
-  if (typeof state === "undefined") {
-    return {};
-  }
-
-  if (action.type === actionTypes.SAVE_RECORDS) {
-    record.addRecord(state);
-    return state;
-  }
-
-  if (action.type === actionTypes.CANCEL_RECORDS) {
-    const curState = record.getPrevRecord();
-    return curState;
-  }
-  if (action.type === actionTypes.REDO) {
-    const curState = record.getNextRecord();
-    return curState;
-  }
-  if (action.type === "save") {
+  if (action.type === actionTypes.SAVE) {
     return {
       ...state,
       ...action.payload,
     };
   }
-
-  if (action.type === "updateComponent") {
-    const { key, ...restProps } = action.payload;
-
-    const result = JSON.parse(restProps.itemProps);
-    return {
-      ...state,
-      componentMap: {
-        ...state.componentMap,
-        [key]: {
-          ...state.componentMap[key],
-          ...result,
-        },
-      },
-    };
-  }
-
-  if (action.type === "updateConatainer") {
-    const { key, ...restProps } = action.payload;
-
-    return {
-      ...state,
-      componentMap: {
-        ...state.componentMap,
-        [key]: {
-          ...state.componentMap[key],
-          containerProps: {
-            ...state.componentMap[key]["containerProps"],
-            style: {
-              ...state.componentMap[key]["containerProps"]["style"],
-              ...restProps,
-            },
-          },
-        },
-      },
-    };
-  }
-
-  if (action.type === "updateCurComponentPos") {
+  
+  // 更新componentContainerStyle属性
+  if (action.type === actionTypes.UPDATE_CURCONTAINER_STYLE) {
     const { payload } = action;
-    const { left, top } = payload;
     const { selectComponentId: id } = state;
     return {
       ...state,
@@ -78,16 +24,27 @@ function reducer(state = initialState, action) {
             ...state.componentMap[id]["containerProps"],
             style: {
               ...state.componentMap[id]["containerProps"]["style"],
-              left,
-              top,
+              ...payload,
             },
           },
         },
       },
     };
   }
-  // 这里暂不处理任何 action，
-  // 仅返回传入的 state。
+
+  if (action.type === actionTypes.SAVE_RECORDS) {
+    record.addRecord(state);
+    return state;
+  }
+
+  if (action.type === actionTypes.CANCEL_RECORDS) {
+    return  record.getPrevRecord();
+  }
+
+  if (action.type === actionTypes.REDO) {
+    return record.getNextRecord();
+  }
+
   return state;
 }
 

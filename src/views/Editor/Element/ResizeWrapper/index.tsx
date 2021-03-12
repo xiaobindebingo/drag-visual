@@ -7,7 +7,7 @@ import { CirclePos } from "../../../../types";
 import Circle from "./Circle";
 import { circleProps } from "./constants";
 import styles from "./index.module.scss";
-import { saveRecords } from "../../../../store/actions";
+import { saveRecords, updateCurContainerStyleAction } from "../../../../store/actions";
 
 const updateComponentMapOrder = (id, componentMap) => {
   const copyObj = cloneDeep(componentMap);
@@ -24,7 +24,7 @@ function ResizeWrapper(props) {
     style,
     className,
     id,
-    updateConatainerPropsStyle,
+    updateCurContainerStyle,
     updateSelectComponentAndOrderMap,
     addRecord,
   } = props;
@@ -79,8 +79,7 @@ function ResizeWrapper(props) {
       },
     };
 
-    updateConatainerPropsStyle({
-      key: id,
+    updateCurContainerStyle({
       ...newPropsByPos[position],
     });
   };
@@ -98,8 +97,7 @@ function ResizeWrapper(props) {
       const { x: curX, y: curY } = getClientPosByEvent(moveEvent);
       const curLeft = curX - startX + left;
       const curTop = curY - startY + top;
-      updateConatainerPropsStyle({
-        key: id,
+      updateCurContainerStyle({
         left: curLeft,
         top: curTop,
       });
@@ -157,12 +155,8 @@ export default connect(
     model: state
   }),
   (dispatch) => ({
-    updateConatainerPropsStyle: (val) =>
-      dispatch({
-        type: "updateConatainer",
-        payload: val,
-      }),
-      updateSelectComponentAndOrderMap: (selectComponentId, componentMap) =>
+    updateCurContainerStyle: (val) =>dispatch(updateCurContainerStyleAction(val)),
+    updateSelectComponentAndOrderMap: (selectComponentId, componentMap) =>
       dispatch(
         changeState(
           {
