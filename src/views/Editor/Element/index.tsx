@@ -43,16 +43,16 @@ function Element(props) {
         >
           {React.Children.map(children, (child)=>{
             return (
-              <div 
-                style={{ 
-                  position: 'absolute', 
-                  zIndex: -1,
-                  width:'100%',
-                  height:'100%'
-                }}
-              >
-                {child}
-              </div>
+              // <div 
+              //   style={{ 
+              //     position: 'absolute', 
+              //     // zIndex: -1,
+              //     width:'100%',
+              //     height:'100%'
+              //   }}
+              // >
+                child
+              // </div>
             )
           })}
         </Component>

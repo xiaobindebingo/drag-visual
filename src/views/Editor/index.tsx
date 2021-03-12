@@ -42,6 +42,7 @@ function Editor(props) {
     scale: scaleRatio,
     componentMap,
     selectComponentId,
+
   }= model;
 
   const initialAreaPos = {
@@ -313,7 +314,7 @@ function Editor(props) {
          renderElement(transferData)
         }
       </div>
-      <MarkLine />
+      {showGridLine && <MarkLine />}
       <Area
       />
     </div>

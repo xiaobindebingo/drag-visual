@@ -4,12 +4,10 @@ import cls from "classnames";
 import cloneDeep from "lodash/cloneDeep";
 import { changeState, getClientPosByEvent } from "../../../../utils";
 import { CirclePos } from "../../../../types";
-import Circle from "../../Circle";
+import Circle from "./Circle";
 import { circleProps } from "./constants";
-import events from '../../../../eventbus';
 import styles from "./index.module.scss";
 import { saveRecords } from "../../../../store/actions";
-import record from "../../../../store/record";
 
 const updateComponentMapOrder = (id, componentMap) => {
   const copyObj = cloneDeep(componentMap);
@@ -123,7 +121,7 @@ function ResizeWrapper(props) {
       ref={wrapper}
       key={id}
       className={cls({
-        [className]: true,
+        [className]: className,
         [styles.selected]: isSelected,
       })}
       style={{

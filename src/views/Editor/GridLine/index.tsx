@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function GridLine (props) {
   const { show } = props;
-  
+
   if (!show) {
     return null;
   }
@@ -15,7 +15,7 @@ export default function GridLine (props) {
                 <path 
                     d="M 7.236328125 0 L 0 0 0 7.236328125" 
                     fill="none" 
-                    stroke="rgba(207, 207, 207, 0.3)" 
+                    stroke="rgba(207, 207, 207, 1)" 
                     strokeWidth="1">
                 </path>
             </pattern>

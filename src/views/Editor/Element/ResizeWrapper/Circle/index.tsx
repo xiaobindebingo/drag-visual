@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './index.module.scss';
-import { getClientPosByEvent } from '../../../utils';
-import record from '../../../store/record';
+import { getClientPosByEvent } from '../../../../../utils';
+import record from '../../../../../store/record';
 
 function Circle (props) {
   const { 
