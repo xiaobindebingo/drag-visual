@@ -52,5 +52,5 @@ class Record {
 
 }
 
-export default new Record([initialState], 0);
+export default new Record([initialState], 0, 100);
 
