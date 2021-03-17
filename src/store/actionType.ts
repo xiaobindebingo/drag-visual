@@ -8,3 +8,5 @@ export const SAVE: string = 'save';
 export const UPDATE_COMPOMENTMAP = 'updateComponentMap';
 
 export const  UPDATE_CURCONTAINER_STYLE= 'updateCurContainerStyle';
+
+export const TOGGLE_LOCK = 'toggleLock';

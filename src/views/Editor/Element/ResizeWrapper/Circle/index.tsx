@@ -8,6 +8,7 @@ function Circle (props) {
     position,
     style,
     addRecord,
+    isLocked,
   } = props;
   
   const handleMouseDown = (e) => {

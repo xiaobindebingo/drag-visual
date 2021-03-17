@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { v4 as uuid } from "uuid";
+import { connect } from 'react-redux';
 import cloneDeep from 'lodash/cloneDeep';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import GridLine from "./GridLine";
 import styles from "./index.module.scss";
-import { v4 as uuid } from "uuid";
-import { connect } from 'react-redux';
+
 import { 
   changeState, 
   getElementPosByEvent, 
@@ -42,8 +43,8 @@ function Editor(props) {
     scale: scaleRatio,
     componentMap,
     selectComponentId,
-
   }= model;
+
 
   const initialAreaPos = {
     startPos: {
@@ -194,7 +195,8 @@ function Editor(props) {
             boxInfo.left < left && 
             boxInfo.top < top && 
             boxInfo.width + boxInfo.left > left + width && 
-            boxInfo.height + boxInfo.top > height + top
+            boxInfo.height + boxInfo.top > height + top 
+            && !componentinfo.isLocked
          ) {
          containIds.push(id);
        }
@@ -275,6 +277,7 @@ function Editor(props) {
     return Object.keys(data).map((uuid, index) => {
       const item = data[uuid];
       return (
+        <>
         <Element 
           id={uuid} 
           key={uuid} 
@@ -283,6 +286,7 @@ function Editor(props) {
         >
           {renderElement(item.children)}
         </Element>
+        </>
       )
     })
   }
@@ -315,8 +319,7 @@ function Editor(props) {
         }
       </div>
       {showGridLine && <MarkLine />}
-      <Area
-      />
+      <Area />
     </div>
   );
 }

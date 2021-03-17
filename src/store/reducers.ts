@@ -9,6 +9,21 @@ function reducer(state = record.list[0], action) {
       ...action.payload,
     };
   }
+
+  if (action.type === actionTypes.TOGGLE_LOCK) {
+    const { id, locked } = action.payload;
+    console.log(id, locked,'locke')
+    return {
+      ...state,
+      componentMap: {
+        ...state.componentMap,
+        [id]: {
+          ...state.componentMap[id],
+          isLocked: locked,
+        }
+      }
+    }
+  }
   
   // 更新componentContainerStyle属性
   if (action.type === actionTypes.UPDATE_CURCONTAINER_STYLE) {
@@ -44,6 +59,7 @@ function reducer(state = record.list[0], action) {
   if (action.type === actionTypes.REDO) {
     return record.getNextRecord();
   }
+
 
   return state;
 }

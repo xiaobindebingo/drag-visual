@@ -13,4 +13,10 @@ export const redoRecords = () => ({
 export const updateCurContainerStyleAction = (payload) => ({
   type: actionTypes.UPDATE_CURCONTAINER_STYLE,
   payload,
+});
+
+export const toggleLockAction = payload => ({
+  type: actionTypes.TOGGLE_LOCK,
+  payload,
 })
+

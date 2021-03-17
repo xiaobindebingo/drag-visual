@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { Icon } from '@ali/wind';
 import { connect } from "react-redux";
 import cls from "classnames";
 import cloneDeep from "lodash/cloneDeep";
@@ -37,7 +38,7 @@ function ResizeWrapper(props) {
   const wrapper = useRef<any>({});
   const { offsetWidth, offsetHeight, offsetLeft, offsetTop } = wrapper.current;
   const isSelected = id && id === selectComponentId;
-
+  const { isLocked } = componentMap[id];
   const updateComponentItemByPos = (position: CirclePos, updateProps) => {
     const { distanceX = 0, distanceY = 0 } = updateProps;
     const newPropsByPos = {
@@ -93,7 +94,11 @@ function ResizeWrapper(props) {
     const top = e.currentTarget.offsetTop;
 
     updateSelectComponentAndOrderMap(id, orderMap);
+    
     const move = (moveEvent) => {
+      if (isLocked) {
+        return;
+      }
       const { x: curX, y: curY } = getClientPosByEvent(moveEvent);
       const curLeft = curX - startX + left;
       const curTop = curY - startY + top;
@@ -134,17 +139,28 @@ function ResizeWrapper(props) {
       onMouseDown={handleMouseDown}
       onDragOver={(e) => e.preventDefault()}
     >
-      {isSelected &&
-        circleProps.map((circleProp) => {
-          return (
-            <Circle
-              addRecord={addRecord}
-              updateComponentItemByPos={updateComponentItemByPos}
-              key={circleProp.position}
-              {...circleProp}
-            />
-          );
-        })}
+      {
+        isSelected && !isLocked  &&
+          circleProps.map((circleProp) => {
+            return (
+              (
+                <Circle
+                  addRecord={addRecord}
+                  updateComponentItemByPos={updateComponentItemByPos}
+                  key={circleProp.position}
+                  {...circleProp}
+                />
+              )
+            );
+          })
+      }
+      {
+        isLocked && (
+          <div className={styles.locked}>
+            <Icon size="xs" type="lock-fill" />
+          </div>
+        )
+      }
       {props.children}
     </div>
   );

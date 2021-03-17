@@ -9,10 +9,13 @@ import {
 } from "../../utils";
 import { v4 as uuid } from "uuid";
 import styles from "./index.module.scss";
-import { cancelRecords, redoRecords, saveRecords } from "../../store/actions";
+import { 
+  cancelRecords,
+  redoRecords,
+  saveRecords,
+  toggleLockAction,
+} from "../../store/actions";
 import record from "../../store/record";
-
-let timer = null;
 
 function Header(props) {
   const {
@@ -24,6 +27,7 @@ function Header(props) {
     addRecords,
     cancelRecords,
     redoRecords,
+    toggleLock,
   } = props;
   const {
     containIds,
@@ -42,6 +46,9 @@ function Header(props) {
     height: Math.abs(endPos.top - startPos.top),
   };
 
+
+
+  const { isLocked } =  componentMap[selectComponentId] || {};
   const [speed, setSpeed] = useState<number>(1000);
 
   const playback = (state, speed) => {
@@ -138,6 +145,13 @@ function Header(props) {
     addRecords();
   };
 
+  const handleLock = () => {
+    toggleLock({
+      id: selectComponentId,
+      locked: !isLocked,
+    })
+  }
+
   const handleSplit = () => {
     addRecords();
     const { type } = componentMap[selectComponentId];
@@ -202,6 +216,13 @@ function Header(props) {
       />
       %
       <div style={{ marginLeft: 16 }}>
+      <Button
+          type="secondary"
+          disabled={!selectComponentId}
+          onClick={handleLock}
+        >
+          { isLocked ? "解锁" : "锁定" }
+        </Button>
         <Button
           type="primary"
           disabled={containIds.length <= 1}
@@ -247,6 +268,7 @@ export default connect(
       cancelRecords: (step) => dispatch(cancelRecords(step)),
       redoRecords: () => dispatch(redoRecords()),
       addRecords: () => dispatch(saveRecords()),
+      toggleLock: val => dispatch(toggleLockAction(val)),
     };
   }
 )(Header);

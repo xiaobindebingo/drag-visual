@@ -27,4 +27,5 @@ function AttributePanel(props) {
 }
 
 export default connect((state) => state, (dispatch)=>({
+
 }))(AttributePanel);
