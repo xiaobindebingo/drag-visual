@@ -2,6 +2,7 @@ import React from 'react';
 import ComponentStore from '../../resourceCenter/componentStore';
 import { connect } from 'react-redux';
 import styles from './index.module.scss';
+import { GROUP } from '../../constants';
 
 function ComponentPanel(props) {
   return (
@@ -9,6 +10,9 @@ function ComponentPanel(props) {
       {
       Object.keys(ComponentStore).map(key=> {
         const component = ComponentStore[key];
+        if (key === GROUP) {
+          return null;
+        }
         return (
           <div 
           className={styles.cell} 

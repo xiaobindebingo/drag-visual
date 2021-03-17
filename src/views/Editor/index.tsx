@@ -21,6 +21,7 @@ import {
   redoRecords, 
   saveRecords,
 } from "../../store/actions";
+import { GROUP } from '../../constants';
 
 const id = 'editorWrapper';
 
@@ -69,7 +70,7 @@ function Editor(props) {
  const deleteElement = (parentId, copyState) => {
 
   const { type } = copyState[parentId];
-  if (type === 'group') {
+  if (type === GROUP) {
     const childs =  findChildrenIdBySelectId(parentId);
     childs.forEach(id => {
       deleteElement(id, copyState)

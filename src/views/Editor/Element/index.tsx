@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { getElementByType } from "../../../utils";
 import ResizeWrapper from "./ResizeWrapper";
+import { GROUP } from '../../../constants';
 
   // 独立模式下： 没有parentId && 没有children
   // 组合模式下： 顶层group 中间层group，底层component
@@ -32,7 +33,7 @@ function Element(props) {
     );
   }
   // 组合模式下顶层Group渲染
-  if (!parentId && type === "group") {
+  if (!parentId && type === GROUP) {
     return (
       <ResizeWrapper
         containerProps={containerProps}
@@ -60,7 +61,7 @@ function Element(props) {
     );
   }
  // 组合模式下 中间层group渲染
-  if (parentId && type === "group" && children && children.length > 0) {
+  if (parentId && type === GROUP && children && children.length > 0) {
     return (
       <div
         style={{

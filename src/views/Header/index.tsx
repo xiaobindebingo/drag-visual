@@ -16,6 +16,7 @@ import {
   toggleLockAction,
 } from "../../store/actions";
 import record from "../../store/record";
+import { GROUP } from '../../constants';
 
 function Header(props) {
   const {
@@ -155,7 +156,7 @@ function Header(props) {
   const handleSplit = () => {
     addRecords();
     const { type } = componentMap[selectComponentId];
-    if (type === "group") {
+    if (type === GROUP) {
       const splitMap = getSplitComponentMap(selectComponentId);
       const newState = {
         componentMap: { ...splitMap },
