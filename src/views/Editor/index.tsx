@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import cloneDeep from 'lodash/cloneDeep';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import GridLine from "./GridLine";
+import { plainDatatoTree } from '../../utils';
 import styles from "./index.module.scss";
 
 import { 
@@ -254,44 +255,23 @@ function Editor(props) {
     }
   }
 
-  const converData = componentMap => {
-    const uuids = Object.keys(componentMap);
-    const copyComponentMap = cloneDeep(componentMap)
-    uuids.forEach(id => {
-      const { parentId } = copyComponentMap[id];
-      if (parentId) {
-        if(copyComponentMap[parentId].children) {
-          copyComponentMap[parentId]['children'][id] = copyComponentMap[id]
-        } else {
-          copyComponentMap[parentId]['children'] = {
-            [id]: copyComponentMap[id]
-          }
-        }
-        delete copyComponentMap[id];
-      }
-    });
-    return copyComponentMap;
-  }
-
   const renderElement = (data) => {
     if(!data) return null;
     return Object.keys(data).map((uuid, index) => {
       const item = data[uuid];
       return (
-        <>
-        <Element 
-          id={uuid} 
-          key={uuid} 
-          item={item} 
-          index={index}
-        >
-          {renderElement(item.children)}
-        </Element>
-        </>
+          <Element 
+            id={uuid} 
+            key={uuid} 
+            item={item} 
+            index={index}
+          >
+            {renderElement(item.children)}
+          </Element>
       )
     })
   }
-  const transferData = converData(componentMap);
+  const transferData = plainDatatoTree(componentMap);
 
   return (
     <div 

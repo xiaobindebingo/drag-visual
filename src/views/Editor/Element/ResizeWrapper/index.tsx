@@ -133,8 +133,6 @@ function ResizeWrapper(props) {
         ...style,
         zIndex: index,
         ...containerProps.style,
-        width: containerProps.style.width,
-        height: containerProps.style.height,
       }}
       onMouseDown={handleMouseDown}
       onDragOver={(e) => e.preventDefault()}

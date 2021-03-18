@@ -36,6 +36,7 @@ function Element(props) {
   if (!parentId && type === GROUP) {
     return (
       <ResizeWrapper
+        index={index}
         containerProps={containerProps}
         id={id}
       >

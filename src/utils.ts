@@ -1,4 +1,5 @@
 import ComponentStore from "./resourceCenter/componentStore";
+import cloneDeep from 'lodash/cloneDeep';
 
 export function changeBatchState(obj) {
     return {
@@ -125,4 +126,23 @@ export const realtiveToAbsoluteCoordinate = (innterPropsStyle, containerBox) => 
   }
 
   return  result;
+}
+
+export const plainDatatoTree = componentMap => {
+  const uuids = Object.keys(componentMap);
+  const copyComponentMap = cloneDeep(componentMap)
+  uuids.forEach(id => {
+    const { parentId } = copyComponentMap[id];
+    if (parentId) {
+      if(copyComponentMap[parentId].children) {
+        copyComponentMap[parentId]['children'][id] = copyComponentMap[id]
+      } else {
+        copyComponentMap[parentId]['children'] = {
+          [id]: copyComponentMap[id]
+        }
+      }
+      delete copyComponentMap[id];
+    }
+  });
+  return copyComponentMap;
 }
