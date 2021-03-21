@@ -4,8 +4,10 @@
   "homepage": "./",
   "private": true,
   "husky": {
-    "pre-commit": "npm run lint",
-    "commit-msg": "npm run srcipts/verify-commit.ts",
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "commit-msg": "npm run srcipts/verify-commit.ts"
+    }
   },
   "dependencies": {
     "@ali/wind": "^3.3.0",
