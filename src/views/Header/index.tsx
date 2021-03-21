@@ -121,7 +121,7 @@ function Header(props) {
       componentMap: {
         ...combineMap,
         [parentId]: {
-          type: "group",
+          type: GROUP,
           containerProps: {
             style: {
               ...boxInfo,
@@ -167,6 +167,12 @@ function Header(props) {
       updateState(newState);
     }
   };
+
+  const handlePublish = () => {
+    // componentMap
+    // window.localStorage.setItem()
+    JSON.stringify(componentMap)
+  }
 
   return (
     <div className={styles.header}>
@@ -252,6 +258,11 @@ function Header(props) {
           }
         >
           预览
+        </Button>
+        <Button
+          onClick={handlePublish}
+        >
+          发布
         </Button>
       </div>
     </div>

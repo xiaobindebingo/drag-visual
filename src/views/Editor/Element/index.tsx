@@ -13,9 +13,11 @@ function Element(props) {
   const {
     id,
     index,
+    style,
     item: { type, componentProps, containerProps, parentId },
     children,
   } = props;
+  console.log(props,'ppp')
   const Component = getElementByType(type);
   // 独立模式下的Component渲染
   if(!containerProps) {
@@ -43,20 +45,12 @@ function Element(props) {
         <Component 
           {...componentProps}
         >
-          {React.Children.map(children, (child)=>{
+          {children}
+          {/* {React.Children.map(children, (child)=>{
             return (
-              // <div 
-              //   style={{ 
-              //     position: 'absolute', 
-              //     // zIndex: -1,
-              //     width:'100%',
-              //     height:'100%'
-              //   }}
-              // >
                 child
-              // </div>
             )
-          })}
+          })} */}
         </Component>
       </ResizeWrapper>
     );
@@ -78,12 +72,15 @@ function Element(props) {
 
   // 组合模式下，内含的Component渲染
   if (parentId && !children) {
+    console.log(style,'stylePr')
     return (
       <div
       style={{
         position: "absolute",
         cursor: "move",
+        ...style,
         ...containerProps.style,
+ 
       }}
     >
       <Component {...componentProps} />

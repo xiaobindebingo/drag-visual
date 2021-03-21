@@ -76,6 +76,21 @@ export function mixinObject (oldObj, newObj) {
   return result;
 }
 
+export function computePositionByEventAndId(curDom, target) {
+  let left = 0, top = 0;
+  while (curDom.parentNode !== target){
+    if(curDom.offsetLeft){
+      left += curDom.offsetLeft;
+    }
+    if(curDom.offsetTop) {
+      top += curDom.offsetTop;
+    }
+
+    curDom = curDom.parentNode;
+  }
+  return {left, top}
+}
+
 export function findDOMByEventAndId(e,id) {
   let element;
   if (e.target) {
@@ -107,6 +122,7 @@ export const absoluteToRealtiveCoordinate = (innterPropsStyle, containerBox) => 
   }
   const { top, left, width, height } = innterPropsStyle;
   const result = {
+    ...containerBox,
     left: pxToPercent((left - containerBox.left) / containerBox.width),
     top: pxToPercent((top - containerBox.top) / containerBox.height),
     width: pxToPercent((width / containerBox.width)),
@@ -119,10 +135,10 @@ export const realtiveToAbsoluteCoordinate = (innterPropsStyle, containerBox) => 
 
   const { top, left, width, height } = innterPropsStyle;
   const result = {
-    left: percentToPx(containerBox.width,left) + containerBox.left,
-    top: percentToPx(containerBox.height, top) + containerBox.top,
-    width: percentToPx(containerBox.width, width),
-    height: percentToPx(containerBox.height, height),
+    left: Math.ceil(percentToPx(containerBox.width,left) + containerBox.left),
+    top: Math.ceil(percentToPx(containerBox.height, top) + containerBox.top),
+    width: Math.ceil(percentToPx(containerBox.width, width)),
+    height: Math.ceil(percentToPx(containerBox.height, height)),
   }
 
   return  result;

@@ -7,3 +7,10 @@
   right: -6px;
   top: -12px;
 }
+.rotate{
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: -26px;
+  transform: translateX(-7px);
+}
