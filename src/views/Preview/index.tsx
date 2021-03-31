@@ -1,45 +1,66 @@
-import React from "react";
-import { Dialog } from "@ali/wind";
-import { connect } from "react-redux";
+import React from 'react';
+import { connect } from 'react-redux';
 
-import { changeState, plainDatatoTree, getElementByType } from "../../utils";
-import { GROUP } from "../../constants";
+import { Dialog } from '@ali/wind';
+
+import { GROUP } from '../../constants';
+import { changeState, plainDatatoTree, getElementByType } from '../../utils';
 
 function Preview(props) {
-  const { model, updateState } = props;
-  const { previewVisible, canvasWidth, canvasHeight, componentMap } = model;
+  const {
+    model,
+    updateState,
+  } = props;
+
+  const {
+    previewVisible,
+    canvasWidth,
+    canvasHeight,
+    componentMap,
+  } = model;
+
   if (!previewVisible) {
     return null;
   }
 
   const transferData = plainDatatoTree(componentMap);
 
-  const renderElement = (transferData) => {
-    if (!transferData) {
+  const renderElement: (transferData: any) => any = data => {
+    if (!data) {
       return null;
     }
-    return Object.keys(transferData).map((id, index) => {
-      const { type, containerProps, componentProps, children } = transferData[
-        id
+
+    return Object.keys(data).map(id => {
+      const { type, containerProps, componentProps, children } = data[
+          id
       ];
       const Component = getElementByType(type);
 
       const renderComponent = () => {
-        //group渲染
+        // group渲染
         if (type === GROUP) {
           return renderElement(children);
         }
 
         // 独立component渲染
         if (type !== GROUP) {
-          return <Component {...componentProps} />;
+          return (
+            <Component
+              {...componentProps} />
+          );
         }
 
         return null;
       };
 
       return (
-        <div key={id} style={{ position: "absolute", ...containerProps.style }}>
+        <div
+          key={id}
+          style={{
+            position: 'absolute',
+            ...containerProps.style,
+            transform: `rotate(${containerProps.style.rotate}deg)`
+          }}>
           {renderComponent()}
         </div>
       );
@@ -59,15 +80,13 @@ function Preview(props) {
       onClose={closeDialog
       }
       onCancel={closeDialog}
-      onOk={closeDialog}
-    >
+      onOk={closeDialog}>
       <div
         style={{
-          position: "relative",
+          position: 'relative',
           width: canvasWidth,
           height: canvasHeight,
-        }}
-      >
+        }}>
         {renderElement(transferData)}
       </div>
     </Dialog>
@@ -75,10 +94,10 @@ function Preview(props) {
 }
 
 export default connect(
-  (state) => ({
-    model: state,
-  }),
-  (dispatch) => ({
-    updateState: (val) => dispatch(changeState(val)),
-  })
+    state => ({
+      model: state,
+    }),
+    dispatch => ({
+      updateState: val => dispatch(changeState(val)),
+    })
 )(Preview);

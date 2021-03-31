@@ -1,5 +1,10 @@
 {
   "extends": [
     "@alicloud/eslint-config/tsx"
-  ]
+  ],
+  "rules": {
+    "comma-dangle": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["off"]
+  }
 }

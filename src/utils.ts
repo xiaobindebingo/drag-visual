@@ -1,14 +1,6 @@
 import ComponentStore from "./resourceCenter/componentStore";
 import cloneDeep from 'lodash/cloneDeep';
 
-export function changeBatchState(obj) {
-    return {
-      type: 'save',
-      payload: obj,
-    }
-
-}
-
 export function changeState(key, newVal?) {
 
   if (Object.prototype.toString.call(key) === "[object Object]") {
@@ -37,7 +29,7 @@ export function changeState(key, newVal?) {
 }
 
 
-export function getClientPosByEvent(e) {
+export function getClientPosByEvent(e:MouseEvent) {
   return {
     x: e.clientX,
     y: e.clientY,
@@ -107,7 +99,7 @@ export function findDOMByEventAndId(e,id) {
 
 const pxToPercent = val => `${val * 100}%`;
 const percentToPx = (val, percent) => {
-  const ratio = percent.match(/\d+/g)[0] / 100;
+  const ratio = percent.match(/\d+(\.\d+)?/g)[0] / 100;
   return val * ratio;
 }
 /**
@@ -120,25 +112,26 @@ export const absoluteToRealtiveCoordinate = (innterPropsStyle, containerBox) => 
   if (!innterPropsStyle) {
     return { top: 0, left: 0, width: 0, height: 0 };
   }
-  const { top, left, width, height } = innterPropsStyle;
+  const { top, left, width, height, ...otherStyle } = innterPropsStyle;
   const result = {
-    ...containerBox,
     left: pxToPercent((left - containerBox.left) / containerBox.width),
     top: pxToPercent((top - containerBox.top) / containerBox.height),
     width: pxToPercent((width / containerBox.width)),
     height:  pxToPercent((height / containerBox.height)),
+    ...otherStyle,
   };
   return result;
 };
 
 export const realtiveToAbsoluteCoordinate = (innterPropsStyle, containerBox) => {
 
-  const { top, left, width, height } = innterPropsStyle;
+  const { top, left, width, height, ...otherStyle} = innterPropsStyle;
   const result = {
     left: Math.ceil(percentToPx(containerBox.width,left) + containerBox.left),
     top: Math.ceil(percentToPx(containerBox.height, top) + containerBox.top),
     width: Math.ceil(percentToPx(containerBox.width, width)),
     height: Math.ceil(percentToPx(containerBox.height, height)),
+    ...otherStyle
   }
 
   return  result;

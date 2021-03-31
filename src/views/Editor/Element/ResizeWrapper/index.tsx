@@ -1,27 +1,33 @@
-import React, { useRef } from "react";
-import { Icon } from "@ali/wind";
-import { connect } from "react-redux";
-import cls from "classnames";
-import cloneDeep from "lodash/cloneDeep";
-import { changeState, getClientPosByEvent, computePositionByEventAndId } from "../../../../utils";
-import { CirclePos } from "../../../../types";
-import Circle from "./Circle";
-import Rotate from "./Rotate";
-import { circleProps } from "./constants";
-import styles from "./index.module.scss";
+
+import React, { useRef } from 'react';
+import { connect } from 'react-redux';
+import cls from 'classnames';
+import cloneDeep from 'lodash/cloneDeep';
+
+import { Icon } from '@ali/wind';
+
+import { changeState, getClientPosByEvent } from '../../../../utils';
+import { CirclePos } from '../../../../types';
 import {
   saveRecords,
   updateCurContainerStyleAction,
-} from "../../../../store/actions";
+} from '../../../../store/actions';
 
-const updateComponentMapOrder = (id, componentMap) => {
+import Circle from './Circle';
+import Rotate from './Rotate';
+import { circleProps } from './constants';
+import styles from './index.module.scss';
+
+const updateComponentMapOrder = (id, componentMap): any => {
   const copyObj = cloneDeep(componentMap);
+
   delete copyObj[id];
   copyObj[id] = componentMap[id];
+
   return copyObj;
 };
 
-function ResizeWrapper(props) {
+const ResizeWrapper: React.FC<any> = props => {
   const {
     containerProps,
     model,
@@ -70,7 +76,6 @@ function ResizeWrapper(props) {
       l: {
         width: Math.round(offsetWidth - distanceX),
         left: Math.round(offsetLeft + distanceX),
-        // top: Math.round(offsetTop - distanceY),
       },
       r: {
         width: Math.round(offsetWidth + distanceX),
@@ -85,33 +90,35 @@ function ResizeWrapper(props) {
       ...newPropsByPos[position],
     });
   };
-
- 
-
-  const handleRotate = (e) => {
+  const { top, left, width, height, rotate = 0 } = containerProps.style;
+  const centerX = left + width / 2 + 200;
+  const centerY = top + height / 2 + 56;
+  const handleRotate = e => {
     e.preventDefault();
     e.stopPropagation();
-    const {top, left ,width, height, rotate = 0, } = containerProps.style;
-    const centerX = left + width / 2 + 200;
-    const centerY = top + height /2 + 56;
-    const startRotate = (180 / Math.PI) * Math.atan2(e.clientY - centerY, e.clientX - centerX);
 
-    const move = (moveEvent) => {
-      const endRotate = (180 / Math.PI) * Math.atan2(moveEvent.clientY - centerY, moveEvent.clientX - centerX);
+    const startRotate =
+      (180 / Math.PI) * Math.atan2(e.clientY - centerY, e.clientX - centerX);
+
+    const move = moveEvent => {
+      const endRotate =
+        (180 / Math.PI) *
+        Math.atan2(moveEvent.clientY - centerY, moveEvent.clientX - centerX);
+
       updateCurContainerStyle({
-        rotate: endRotate - startRotate + rotate,
-      })
-      
-    }
+        rotate: Math.round(endRotate - startRotate + rotate),
+      });
+    };
     const up = () => {
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
-    }
-    document.addEventListener('mousemove', move);
-    document.addEventListener('mouseup', up)
-  }
+    };
 
-  const handleMouseDown = (e) => {
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  };
+
+  const handleMouseDown = e => {
     e.preventDefault();
     e.stopPropagation();
     const orderMap = updateComponentMapOrder(id, componentMap);
@@ -121,13 +128,15 @@ function ResizeWrapper(props) {
 
     updateSelectComponentAndOrderMap(id, orderMap);
 
-    const move = (moveEvent) => {
+    const move = moveEvent => {
       if (isLocked) {
         return;
       }
+
       const { x: curX, y: curY } = getClientPosByEvent(moveEvent);
       const curLeft = curX - startX + left;
       const curTop = curY - startY + top;
+
       updateCurContainerStyle({
         left: curLeft,
         top: curTop,
@@ -136,14 +145,18 @@ function ResizeWrapper(props) {
 
     const up = () => {
       addRecord();
-      document.removeEventListener("mousemove", move);
-      document.removeEventListener("mouseup", up);
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
     };
-    document.addEventListener("mousemove", move);
-    document.addEventListener("mouseup", up);
+
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
   };
+
   return (
     <div
+      tabIndex={0}
+      role="button"
       ref={wrapper}
       key={id}
       className={cls({
@@ -151,65 +164,53 @@ function ResizeWrapper(props) {
         [styles.selected]: isSelected,
       })}
       style={{
-        position: "absolute",
-        cursor: "move",
+        position: 'absolute',
+        cursor: 'move',
         ...style,
         zIndex: index,
         ...containerProps.style,
-        transform: `rotate(${containerProps.style.rotate}deg)`
+        transform: `rotate(${containerProps.style.rotate}deg)`,
       }}
       onMouseDown={handleMouseDown}
-      onDragOver={(e) => e.preventDefault()}
-    >
-      {isSelected && !isLocked && <Rotate onMouseDown={handleRotate} className={styles.rotate} />}
-      {isSelected &&
-        !isLocked &&
-
-        circleProps.map((circleProp) => {
-          return (
+      onDragOver={e => e.preventDefault()}>
+      {isSelected && !isLocked && (
+        <>
+          <Rotate onMouseDown={handleRotate} className={styles.rotate} />
+          {circleProps.map(circleProp => {
+            return (
               <Circle
                 addRecord={addRecord}
                 updateComponentItemByPos={updateComponentItemByPos}
                 key={circleProp.position}
-                {...circleProp}
-              />
-          );
-        })}
+                {...circleProp} />
+            );
+          })}
+        </>
+      )}
       {isLocked && (
         <div className={styles.locked}>
           <Icon size="xs" type="lock-fill" />
         </div>
       )}
-      {
-      React.Children.map(props.children, child=>{
-        return React.cloneElement(child, {
-          dd: containerProps.style.rotate,
-          style:{
-            transform: `rotate(${containerProps.style.rotate}deg)`
-          }
-        })
-      }
-      )
-    
-      }
+      {props.children}
     </div>
   );
-}
+};
 
 export default connect(
-  (state) => ({
-    model: state,
-  }),
-  (dispatch) => ({
-    updateCurContainerStyle: (val) =>
-      dispatch(updateCurContainerStyleAction(val)),
-    updateSelectComponentAndOrderMap: (selectComponentId, componentMap) =>
-      dispatch(
-        changeState({
-          selectComponentId,
-          componentMap,
-        })
-      ),
-    addRecord: () => dispatch(saveRecords()),
-  })
+    state => ({
+      model: state,
+    }),
+    dispatch => ({
+      updateCurContainerStyle: val =>
+        dispatch(updateCurContainerStyleAction(val)),
+      updateSelectComponentAndOrderMap: (selectComponentId, componentMap) =>
+        dispatch(
+            changeState({
+              selectComponentId,
+              componentMap,
+            })
+        ),
+      addRecord: () => dispatch(saveRecords()),
+    })
 )(ResizeWrapper);

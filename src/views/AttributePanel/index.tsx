@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { Input, Button } from '@ali/wind';
-import styles from "./index.module.scss";
+import React from 'react';
+import { connect } from 'react-redux';
 
-function AttributePanel(props) {
+import styles from './index.module.scss';
+
+function AttributePanel(props):React.ReactElement {
   const { selectComponentId, componentMap } = props;
   const {
     containerProps,
@@ -11,12 +11,13 @@ function AttributePanel(props) {
   } = componentMap[selectComponentId] || {};
 
   return (
-    selectComponentId && 
+    selectComponentId &&
     <div className={styles.attributePanel}>
       x: {containerProps.style.left}
       y: {containerProps.style.top}
       width: {containerProps.style.width}
       height: {containerProps.style.height}
+      rotate: {containerProps.style.rotate}
       {/* <Input.TextArea
         rows={20}
         value={JSON.stringify(containerProps)} 
@@ -26,6 +27,6 @@ function AttributePanel(props) {
   );
 }
 
-export default connect((state) => state, (dispatch)=>({
+export default connect(state => state, dispatch => ({
 
 }))(AttributePanel);

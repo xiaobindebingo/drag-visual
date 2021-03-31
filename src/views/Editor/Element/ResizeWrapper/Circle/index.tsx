@@ -1,50 +1,53 @@
 import React from 'react';
-import styles from './index.module.scss';
+
 import { getClientPosByEvent } from '../../../../../utils';
 import record from '../../../../../store/record';
 
-function Circle (props) {
-  const { 
+import styles from './index.module.scss';
+
+function Circle(props): React.ReactElement {
+  const {
     position,
     style,
     addRecord,
-    isLocked,
   } = props;
   
-  const handleMouseDown = (e) => {
+  const handleMouseDown = e => {
     e.preventDefault();
     e.stopPropagation();
     const {
-      x: startX, 
+      x: startX,
       y: startY,
     } = getClientPosByEvent(e);
-    const move = (moveEvent) => {
+    const move:(e: MouseEvent)=>void = moveEvent => {
       const {
         x: curX,
         y: curY,
       } = getClientPosByEvent(moveEvent);
       const distanceX = curX - startX;
       const distanceY = curY - startY;
-      props.updateComponentItemByPos(position, {distanceX, distanceY})
-    }
+
+      props.updateComponentItemByPos(position, { distanceX, distanceY });
+    };
 
     const up = () => {
       addRecord();
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
-    }
+    };
+
     document.addEventListener('mousemove', move);
-    document.addEventListener('mouseup', up)
-  }
-  // const pointStyle = getpostion(position);
+    document.addEventListener('mouseup', up);
+  };
+
   return (
     <div
-     onMouseDown={handleMouseDown}
-     style={style}
-     className={styles.circle}
-    />
-  )
+      role="button"
+      tabIndex={0}
+      onMouseDown={handleMouseDown}
+      style={style}
+      className={styles.circle} />
+  );
 }
-
 
 export default Circle;

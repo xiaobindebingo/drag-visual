@@ -5,9 +5,12 @@
   "private": true,
   "husky": {
     "hooks": {
-
       "commit-msg": "node verify-commit.ts"
     }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": "eslint",
+    "test/**/*.{js,jsx,ts,tsx}": "eslint"
   },
   "dependencies": {
     "@ali/wind": "^3.3.0",
@@ -66,6 +69,7 @@
     "@types/react-test-renderer": "^16.9.2",
     "@typescript-eslint/parser": "^4.18.0",
     "husky": "^4.3.8",
+    "lint-staged": "^10.5.4",
     "node-sass": "^4.14.1",
     "react-test-renderer": "^16.13.1",
     "stats-js": "^1.0.1"
